@@ -29,7 +29,7 @@ title: Proposal
 	We scheduled a second meeting for Friday (01/22/2021) at 4:45 PM.
 
 
-<Title> Proposal #2:  </Title> 
+<title> Proposal #2:  </title> 
 <b> Zoomer </b> 
 <b> Fast Gliding through obstacles </b> 
 
