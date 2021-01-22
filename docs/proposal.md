@@ -3,7 +3,7 @@ layout: default
 title: Proposal
 ---
 
-<b> Mimicraft Mimicking 2D Images into 3D Minecraft Models </b>
+<b> Mimicraft </b>
 <b> Summary: </b>
 	Our project is an AI that takes in a picture as an input and produces a 3D picture as output. Our goal is to have Mimicraft search for a block of space in our world that will be sufficiently large enough to build the projected image on and then it should go on to produce a group of blocks in Minecraft that essentially mimic (as closely as possible in 3D) the input we’ve given it. To convert our input image into a format that will be usable by our AI, we will use Matplotlib, which can convert our image into a matrix of RBG values for Mimicraft to use. 
 
@@ -29,10 +29,10 @@ title: Proposal
 	We scheduled a second meeting for Friday (01/22/2021) at 4:45 PM.
 
 
-
-Proposal #2: 
+<b> Proposal #2:  </b> 
 <b> Zoomer </b> 
-Fast Gliding through obstacles
+<b> Fast Gliding through obstacles </b> 
+
 <b> Summary: </b>
 	Our project is an AI that guides the player through a variety of objects as fast as possible using elytra. Glyder uses OpenCV and reinforcement learning to guide a player in a straight line using elytra without stopping, dying, or touching the floor. We will record the screen the agent is playing on with OpenCV. Then we will analyze the image to identify what is a solid object and what is an air block. After analyzing the image, the agent will move to the optimal gaps to reach the end of the goal using the mechanics of the elytra or firework rockets. 
 
