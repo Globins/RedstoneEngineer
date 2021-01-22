@@ -3,32 +3,46 @@ layout: default
 title: Proposal
 ---
 
-Proposal - Redstone:
-
+Proposal: Mimicraft Mimicking 2D Images into 3D Minecraft Models
 Summary: 
-    In Minecraft, you can create contraptions that will perform automated tasks for you using specialized redstone or related blocks. These can range from piston doors, auto-farmers, elevators or even flying vehicles. For many builders, these designs can be clunky and take up an unnecessary amount of space, making overall builds cramped and requiring excess material. The goal of RedstoneEngineer is to take a redstone design with its inputs and outputs, and optimize the circuitry behind it to reduce space while maintaining the original intended timings of the mechanism (i.e finding the shortest and most optimal path for the circuit). We can apply this AI to a multitude of applications that deal with Redstone circuits to make builds look nicer and to reduce excess material used in a design.
-
+	Our project is an AI that takes in a picture as an input and produces a 3D picture as output. Our goal is to have Mimicraft search for a block of space in our world that will be sufficiently large enough to build the projected image on and then it should go on to produce a group of blocks in Minecraft that essentially mimic (as closely as possible in 3D) the input we’ve given it. To convert our input image into a format that will be usable by our AI, we will use Matplotlib, which can convert our image into a matrix of RBG values for Mimicraft to use. 
 
 AI/ML Algorithms: 
-We plan on using Reinforcement Learning on the agent’s ability to navigate through the redstone circuit quicker.
- 
-
+    We plan on attempting several different approaches to evaluate which works best. 
+    Deep learning - deep neural networks: to produce the image
+    K nearest neighbor: to produce the image
+    Supervised learning: to find the best space to build our image on
+    
 Evaluation Plan: 
-    We will take several quantitative measurements to evaluate the performance of our AI. We will measure and keep track of the amount of time it takes the agent to complete the maze given a certain original redstone design/blueprint. We will also keep track of how much resources the AI uses in its design while maintaining the desired output. We will monitor both of these values to ensure that our agent is learning and improving their time and overall circuit  creation each time around (for the most part). As a part of our manual evaluation plan, we will complete the maze ourselves in order to find the most optimal solution for it and check that the agent is achieving the same result (or similarly optimal) in the end. 
-    In order to ensure our Agent is working properly, we will begin by seeing whether the Agent ignores traps or opens unnecessary doors. From there, we will test whether the Agent starts fixing traps and ignoring certain doors to reach the end of the maze quicker. As part of a sanity check, we will record the changes the Agent makes every round it is run, and see if it is improving overall. We will know our Agent is working properly when it knows which doors to open and which traps to fix in order to get to the end in the quickest time possible.
+    Quantitative Evaluation:
+        For our quantitative evaluation, we plan on measuring the accuracy of the RBG values for each pixel to the RBG values of each corresponding block in Minecraft. If we notice the RBG values are varying greatly, then we will optimize the way in   which our project chooses certain blocks to use in the image. Our baseline goal is to have each RBG value (from the input image) correspond to at least a similar enough RBG value (in the minecraft image). From there, we will try to improve our project to have the lowest RBG value difference possible. 
+        https://www.pyimagesearch.com/2014/09/15/python-compare-two-images/
+        We will use this python technique to compare the two images using Mean Squared Error and Structural Similarity Index
+        https://deepai.org/machine-learning-model/image-similarity#:~:text=Image%20Similarity%20compares%20two%20images,of%20'0'%20being%20identical.
+        We will also use this image similarity API to compare the two images, we will get a return value that tells us how similar our images are to each other. 
+    Qualitative Evaluation:
+	    For our qualitative evaluation, we will analyze how close the input image looks compared to the minecraft image. For our sanity cases, we will start off with simpler images such as images of a phone and see if Mimicraft can accurately convert the image into a Minecraft image using the proper blocks. Once we can confirm simple images are being converted accurately, we will start testing out a bit more colorful and complicated images. 
+    Moonshot Case: 
+        Our moonshot case would be to create our 3d model in a way where if the agent moves around the model, it/the user will be able to tell exactly what the model is an image of from all angles (without having known what the input was).
 
+Appointment with the Instructor: 
+	We scheduled a second meeting for Friday (01/22/2021) at 4:45 PM.
 
-Backup Proposal: CombatAI
-
-
+Proposal #2: Zoomer Fast Gliding through obstacles
 Summary: 
-	In Minecraft, you face off different kinds of enemies and players, and you can only fight given what’s in your inventory. For our AI, we will use different techniques and weaponry in response to different combat cues such as type of mob, if a player is using a shield, what kind of weapon the agent has, and what the player has in its hand. We will give the agent various weapons and spawn several close combat and long range creatures in front of the AI. We will then examine how long the AI survives, how many creatures it kills, and the experience level it has gained from the battles.
+	Our project is an AI that guides the player through a variety of objects as fast as possible using elytra. Glyder uses OpenCV and reinforcement learning to guide a player in a straight line using elytra without stopping, dying, or touching the floor. We will record the screen the agent is playing on with OpenCV. Then we will analyze the image to identify what is a solid object and what is an air block. After analyzing the image, the agent will move to the optimal gaps to reach the end of the goal using the mechanics of the elytra or firework rockets. 
 
 AI/ML Algorithms: 
-We plan on using Reinforcement Learning on the agent’s ability to know when to use which weapon and when to retreat.
- 
+    Reinforcement Learning to know when it is going too fast (when to stop using fireworks to boost itself). The reward will be based on the time the agent is flying.
 Evaluation Plan: 
-	We will take several quantitative measurements to evaluate the performance of our AI. We plan on keeping track of how often our agent picks the correct weapon in battle against his opponent vs. how often it does not. We will also monitor the amount of health the agent has vs. his enemy in battle each round. Another measurement we will use is the amount of experience the AI has gotten (based off of the level bar near the health); the greater the experience, the better the AI performed. The fourth and final value we will keep track of is the length of time our agent survives each round. These numbers will give us an idea of how much the agent is learning and improving in each round. 
-	In order to ensure that our agent is on the right track we will check to make sure that it is actually attempting to fight in the battle with their opponent and that the agent has picked a weapon (any weapon - first at random and then with more knowledge). As a part of the sanity check we will record the weapons the agent picks each time to ensure that if they are not working in its previous battles, then the agent is attempting new ones in the later battles. Our end goal would be for our AI to beat the Ender Dragon. 
+    Quantitative Evaluation: 
+	    For our quantitative evaluation, we will record the time period that the agent is able to stay alive for (without dying from kinetic energy or fall damage). Our base case is for the agent to survive for 45 seconds. As we continue to improve our agent, we will expect to see improvements in the time they survive every trial run.
+    Qualitative Evaluation: 
+	    For our qualitative evaluation, we will make sure that our AI makes it through the objects of different heights and widths eventually. 
+        For our sanity checks, we will make sure that our agent is gliding in the air without touching the ground. We expect the agent to be able to navigate over mountains and through ravines. Eventually, we will try to improve our agent to be able to navigate through forests without crashing. Another sanity check we will use is to see how fast the agent can make it from one side to another. 
+    Moonshot Case: 
+        Our agent will be able to navigate through obstacles at low visibility (Light = 3 or lower), this will affect how the agent will see and react to certain obstacles.
+	
+Appointment with the Instructor: 
+	We scheduled a second meeting for Friday (01/22/2021) at 4:45 PM.
 
-Appointment Time: January 20th 3:30 PM
