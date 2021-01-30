@@ -4,7 +4,7 @@ title: Proposal
 ---
 
 <b> Zoomer </b>
-<b> Fast Gliding through obstacles </b> 
+<b> Fast Gliding Through Obstacles </b> 
 
 <b> Summary: </b>
 	Our project is an AI that guides the player through a variety of objects as fast as possible using elytra. Glyder will use reinforcement learning to guide a player in a straight line using elytra without stopping, dying, or touching the floor. Glyder will be placed in a tube at the start of the game where it will need to navigate the randomly generated obstacles placed in front of it until it reaches the redstone and completes the level. 
