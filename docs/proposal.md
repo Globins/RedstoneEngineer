@@ -12,7 +12,7 @@ title: Proposal
 
 
 <b> AI/ML Algorithms: </b>
-    Reinforcement Learning to know when it is going too fast (when to stop using fireworks to boost itself). The positive reward will be based on the time the agent has spent flying. The negative reward will be on whether the agent hits a block or not.
+    Reinforcement Learning to know when it is going too fast (when to stop using fireworks to boost itself). The positive reward will be based on the time the agent has spent flying. The negative reward will be on whether the agent hits a block and dies.
 <b> Evaluation Plan: </b>
     Quantitative Evaluation: 
 	    For our quantitative evaluation, we will record the time period that the agent is able to stay alive for (without dying from kinetic energy or fall damage). Our base case is for the agent to survive for 45 seconds. As we continue to improve our agent, we will expect to see improvements in the time they survive every trial run.
