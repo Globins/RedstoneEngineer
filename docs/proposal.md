@@ -1,7 +1,9 @@
 ---
 layout: default
-title: Zoomer
+title: Proposal
 ---
+
+<b> Zoomer </b>
 <b> Fast Gliding through obstacles </b> 
 
 <b> Summary: </b>
