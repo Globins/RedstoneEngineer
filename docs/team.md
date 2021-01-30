@@ -6,11 +6,11 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
+## Sohum Sheth
 ***UCI Net ID***: sohums
 
-## USER 2
+## Gordon Lobins
 ***UCI Net ID***: globins
 
-## USER 3
+## Lin Alsabbagh
 ***UCI Net ID***: lalsabba
