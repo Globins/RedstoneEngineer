@@ -40,6 +40,7 @@ agent_host = MalmoPython.AgentHost()
 malmoutils.parse_command_line(agent_host)
 recordingsDirectory = malmoutils.get_recordings_directory(agent_host)
 video_requirements = '<VideoProducer><Width>860</Width><Height>480</Height></VideoProducer>' if agent_host.receivedArgument("record_video") else ''
+observation_size = 10
 
 def GenCuboid(x1, y1, z1, x2, y2, z2, blocktype,color):
     if color == "":
@@ -50,6 +51,39 @@ def GenCuboid(x1, y1, z1, x2, y2, z2, blocktype,color):
 def GenBlock(x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
     
+def get_observation(world_state):
+        obs = np.zeros((2 * self.obs_size * self.obs_size, ))
+        allow_break_action = False
+
+        while world_state.is_mission_running:
+            time.sleep(0.3)
+            world_state = agent_host.getWorldState()
+            if len(world_state.errors) > 0:
+                raise AssertionError('Could not load grid.')
+
+            if world_state.number_of_observations_since_last_state > 0:
+                msg = world_state.observations[-1].text
+                observations = json.loads(msg)
+                grid = observations['floorAll']
+            
+                for i, x in enumerate(grid):
+                    obs[i] = x == 'air' 
+
+                obs = obs.reshape((2, self.obs_size, self.obs_size))
+                
+                yaw = observations['Yaw']
+                if yaw >= 225 and yaw < 315:
+                    obs = np.rot90(obs, k=1, axes=(1, 2))
+                elif yaw >= 315 or yaw < 45:
+                    obs = np.rot90(obs, k=2, axes=(1, 2))
+                elif yaw >= 45 and yaw < 135:
+                    obs = np.rot90(obs, k=3, axes=(1, 2))
+
+                obs = obs.flatten()
+                
+                break
+
+        return obs
 
 pit_number = random.randint(5, 15)
 clay_number = random.randint(5, 15)
