@@ -147,6 +147,7 @@ goalY = random.randint(5,49)
 goalZ = 70
 blocktypeA = "redstone_block"
 my_xml_goal = GenBlock (goalX,goalY,goalZ,"redstone_block")
+my_xml_blockStart = GenBlock (8,24,0,"redstone_block")
     
 def GetMissionXML(pitfall):
     ''' Build an XML mission string that uses the DefaultWorldGenerator.'''
@@ -170,6 +171,7 @@ def GetMissionXML(pitfall):
                     '''+pitfall+'''
                     '''+high_wall+'''
                     '''+my_xml_goal+'''
+                    '''+my_xml_blockStart+'''
                 </DrawingDecorator>
             <ServerQuitFromTimeUp description="" timeLimitMs="10000"/>
             <ServerQuitWhenAnyAgentFinishes description=""/>
@@ -180,7 +182,7 @@ def GetMissionXML(pitfall):
         <AgentSection mode="Survival">
             <Name>Rover</Name>
             <AgentStart>
-                <Placement x="8" y="5" z="0"/>
+                <Placement x="8" y="25" z="0"/>
             </AgentStart>
             <AgentHandlers>
                 <ContinuousMovementCommands/>
