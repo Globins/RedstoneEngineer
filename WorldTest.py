@@ -180,7 +180,7 @@ def GetMissionXML(pitfall):
         <AgentSection mode="Survival">
             <Name>Rover</Name>
             <AgentStart>
-                <Placement x="8.5" y="25" z="1"/>
+                <Placement x="8" y="25" z="1"/>
             </AgentStart>
             <AgentHandlers>
                 <ContinuousMovementCommands/>
