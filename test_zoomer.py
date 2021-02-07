@@ -1,4 +1,27 @@
+from __future__ import print_function
+# ------------------------------------------------------------------------------------------------
+# Copyright (c) 2016 Microsoft Corporation
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+# associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute,
+# sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all copies or
+# substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+# NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# ------------------------------------------------------------------------------------------------
 
+from builtins import range
+import MalmoPython
+import os
+import random
 import sys
 import time
 import json
@@ -39,7 +62,7 @@ class Zoomer(gym.Env):
 
         # Malmo Parameters
         self.agent_host = MalmoPython.AgentHost()
-
+        
         try:
             self.agent_host.parse( sys.argv )
         except RuntimeError as e:
@@ -81,7 +104,7 @@ class Zoomer(gym.Env):
 
         # Get Observation
         self.obs = self.get_observation(world_state)
-
+        
         return self.obs
 
     def step(self, action):
@@ -100,7 +123,7 @@ class Zoomer(gym.Env):
         # Get Action
         if action[2] > 0:
             self.agent_host.sendCommand('move 1')
-            self.agent_host.sendCommand('turn 0')
+            self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
             self.agent_host.sendCommand('use 1')
             time.sleep(2)
         else:
@@ -128,40 +151,7 @@ class Zoomer(gym.Env):
 
         return self.obs, reward, done, dict()
 
-    def get_observation(self, world_state):
-        obs = np.zeros((2 * self.obs_size * self.obs_size, ))
-        allow_break_action = False
-
-        while world_state.is_mission_running:
-            time.sleep(0.3)
-            world_state = agent_host.getWorldState()
-            if len(world_state.errors) > 0:
-                raise AssertionError('Could not load grid.')
-
-            if world_state.number_of_observations_since_last_state > 0:
-                msg = world_state.observations[-1].text
-                observations = json.loads(msg)
-                grid = observations['floorAll']
-            
-                for i, x in enumerate(grid):
-                    obs[i] = x == 'air' 
-
-                obs = obs.reshape((2, self.obs_size, self.obs_size))
-                
-                yaw = observations['Yaw']
-                if yaw >= 225 and yaw < 315:
-                    obs = np.rot90(obs, k=1, axes=(1, 2))
-                elif yaw >= 315 or yaw < 45:
-                    obs = np.rot90(obs, k=2, axes=(1, 2))
-                elif yaw >= 45 and yaw < 135:
-                    obs = np.rot90(obs, k=3, axes=(1, 2))
-
-                obs = obs.flatten()
-                
-                break
-
-        return obs
-
+    
     def GenCuboid(self, x1, y1, z1, x2, y2, z2, blocktype,color):
         if color == "":
             return '<DrawCuboid x1="' + str(x1) + '" y1="' + str(y1) + '" z1="' + str(z1) + '" x2="' + str(x2) + '" y2="' + str(y2) + '" z2="' + str(z2) + '" type="' + blocktype + '"/>'
@@ -315,61 +305,83 @@ class Zoomer(gym.Env):
         else:
             num_reps = 1
 
-        for iRepeat in range(num_reps):
-            my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #" + str(iRepeat)),validate)
-            my_mission_record = MalmoPython.MissionRecordSpec() # Records nothing by default
-            if self.recordingsDirectory:
-                my_mission_record.recordRewards()
-                my_mission_record.recordObservations()
-                my_mission_record.recordCommands()
-                if self.agent_host.receivedArgument("record_video"):
-                    my_mission_record.recordMP4(24,2000000)
-                my_mission_record.setDestination(self.recordingsDirectory + "//" + "Mission_" + str(iRepeat + 1) + ".tgz")
-
-            max_retries = 3
-            for retry in range(max_retries):
-                try:
-                    # Attempt to start the mission:
-                    self.agent_host.startMission( my_mission, my_client_pool, my_mission_record, 0, "Elytra Test" )
-                    break
-                except RuntimeError as e:
-                    if retry == max_retries - 1:
-                        print("Error starting mission",e)
-                        print("Is the game running?")
-                        exit(1)
-                    else:
-                        time.sleep(2)
-
-            world_state = self.agent_host.getWorldState()
-            while not world_state.has_mission_begun:
-                time.sleep(0.1)
-                world_state = self.agent_host.getWorldState()
-
-            total_reward = 0
-            # main loop:
-            print("Starting Flight")
+        my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #1"),validate)
+        my_mission_record = MalmoPython.MissionRecordSpec() # Records nothing by default
+        if self.recordingsDirectory:
+            my_mission_record.recordRewards()
+            my_mission_record.recordObservations()
+            my_mission_record.recordCommands()
+            if self.agent_host.receivedArgument("record_video"):
+                my_mission_record.recordMP4(24,2000000)
+            my_mission_record.setDestination(self.recordingsDirectory + "//" + "Mission_2.tgz")
+        
+        max_retries = 3
+        for retry in range(max_retries):
+            try:
+                # Attempt to start the mission:
+                self.agent_host.startMission( my_mission, my_client_pool, my_mission_record, 0, "Zoomer" )
+                break
+            except RuntimeError as e:
+                if retry == max_retries - 1:
+                    print("Error starting mission",e)
+                    print("Is the game running?")
+                    exit(1)
+                else:
+                    time.sleep(2)
+            
+        world_state = self.agent_host.getWorldState()
+        while not world_state.has_mission_begun:
+            time.sleep(0.1)
             self.initialize_inventory(self.agent_host)
-            #launch(agent_host)
-            while world_state.is_mission_running:
-                if world_state.number_of_observations_since_last_state > 0:
-                    msg = world_state.observations[-1].text
-                    ob = json.loads(msg)
-                    #boost(ob, agent_host)
-                world_state = self.agent_host.getWorldState()
-                
-            # mission has ended.
+            world_state = self.agent_host.getWorldState()
             for error in world_state.errors:
                 print("Error:",error.text)
-            # if world_state.number_of_rewards_since_last_state > 0:
-            #     reward = world_state.rewards[-1].getValue()
-            #     print("Final reward: " + str(reward))
-            #     total_reward += reward
-            # print("Total Reward: " + str(total_reward))
-            # if total_reward < expected_reward:  # reward may be greater than expected due to items not getting cleared between runs
-            #     print("Total reward did not match up to expected reward - did the crafting work?")
-            time.sleep(0.5) # Give the mod a little time to prepare for the next mission.
+
+
+        # main loop:
+        print("Starting Flight")
+        
             
-            return world_state
+        # mission has ended.
+        
+        
+        #time.sleep(0.5) # Give the mod a little time to prepare for the next mission.
+        
+        return world_state
+
+    def get_observation(self, world_state):
+        obs = np.zeros((2 * self.obs_size * self.obs_size, ))
+        while world_state.is_mission_running:
+            time.sleep(0.3)
+            world_state = self.agent_host.getWorldState()
+            if len(world_state.errors) > 0:
+                raise AssertionError('Could not load grid.')
+            
+            if world_state.number_of_observations_since_last_state > 0:
+                msg = world_state.observations[-1].text
+                
+                observations = json.loads(msg)
+                grid = observations['floorAll']
+           
+                for i, x in enumerate(grid):
+                    obs[i] = x == 'air' 
+
+                obs = obs.reshape((2, self.obs_size, self.obs_size))
+                
+                yaw = observations['Yaw']
+                if yaw >= 225 and yaw < 315:
+                    obs = np.rot90(obs, k=1, axes=(1, 2))
+                elif yaw >= 315 or yaw < 45:
+                    obs = np.rot90(obs, k=2, axes=(1, 2))
+                elif yaw >= 45 and yaw < 135:
+                    obs = np.rot90(obs, k=3, axes=(1, 2))
+
+                obs = obs.flatten()
+                
+                break
+
+        return obs
+
 
     def log_returns(self):
         """
