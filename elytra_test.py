@@ -39,8 +39,6 @@ recordingsDirectory = malmoutils.get_recordings_directory(agent_host)
 video_requirements = '<VideoProducer><Width>860</Width><Height>480</Height></VideoProducer>' if agent_host.receivedArgument("record_video") else ''
 observation_size = 10
 
-items=["red_flower white_tulip", "coal", "planks spruce", "planks birch", "planks dark_oak", "rabbit", "carrot", "potato", "brown_mushroom"]
-
 def buildPositionList(items):
     positions=[]
     for item in items:
@@ -51,8 +49,6 @@ def getSubgoalPositions(positions):
     for p in positions:
         goals += '<Point x="' + str(p[0]) + '" y="227" z="' + str(p[1]) + '" tolerance="1" description="Checkpoint" />'
     return goals
-
-
 
 def initialize_inventory(agent_host):
   for i in range(0, 36):
@@ -69,7 +65,6 @@ def checkRocketPosition(obs, agent_host):
         key = 'InventorySlot_'+str(i)+'_item'
         if key in obs:
             item = obs[key]
-=
             if item == 'fireworks':
                 agent_host.sendCommand("swapInventoryItems 0 " + str(i))
                 return
@@ -129,7 +124,7 @@ def GetMissionXML(summary):
         <AgentSection mode="Creative">
             <Name>Wright</Name>
             <AgentStart>
-                <Placement x="0.5" y="52.0" z="0.5"/>
+                <Placement x="0" y="52.0" z="0"/>
                 <Inventory>
                   <InventoryItem slot='38' type='elytra'/>
                 </Inventory>
