@@ -108,6 +108,8 @@ def GenCuboid(x1, y1, z1, x2, y2, z2, blocktype,color):
 def GenBlock(x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
 
+
+obs = ""
 obstacle_number = random.randint(30, 50)
 for i in range(obstacle_number):
     startx = random.randint(1,57)
@@ -182,6 +184,7 @@ def GetMissionXML(summary):
                     <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
                     <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                     <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
+                    '''+obs+'''
 
                     <DrawEntity x="0" y="5" z="0" type="Cow" yaw="0"/>
                 </DrawingDecorator>
