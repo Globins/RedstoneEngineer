@@ -222,6 +222,12 @@ class Zoomer(gym.Env):
                 <AgentHandlers>
                     <ContinuousMovementCommands turnSpeedDegs="480"/>
                     <ChatCommands/>
+                    <ObservationFromGrid>
+                        <Grid name="floorAll">
+                            <min x="-'''+str(int(self.obs_size/2))+'''" y="-1" z="-'''+str(int(self.obs_size/2))+'''"/>
+                            <max x="'''+str(int(self.obs_size/2))+'''" y="0" z="'''+str(int(self.obs_size/2))+'''"/>
+                        </Grid>
+                    </ObservationFromGrid>
                     <ObservationFromFullInventory/>
                     ''' + self.video_requirements + '''
                 </AgentHandlers>
@@ -368,13 +374,13 @@ class Zoomer(gym.Env):
 
                 obs = obs.reshape((2, self.obs_size, self.obs_size))
                 
-                yaw = observations['Yaw']
-                if yaw >= 225 and yaw < 315:
-                    obs = np.rot90(obs, k=1, axes=(1, 2))
-                elif yaw >= 315 or yaw < 45:
-                    obs = np.rot90(obs, k=2, axes=(1, 2))
-                elif yaw >= 45 and yaw < 135:
-                    obs = np.rot90(obs, k=3, axes=(1, 2))
+                # yaw = observations['Yaw']
+                # if yaw >= 225 and yaw < 315:
+                #     obs = np.rot90(obs, k=1, axes=(1, 2))
+                # elif yaw >= 315 or yaw < 45:
+                #     obs = np.rot90(obs, k=2, axes=(1, 2))
+                # elif yaw >= 45 and yaw < 135:
+                #     obs = np.rot90(obs, k=3, axes=(1, 2))
 
                 obs = obs.flatten()
                 
@@ -395,7 +401,7 @@ class Zoomer(gym.Env):
         returns_smooth = np.convolve(self.returns[1:], box, mode='same')
         plt.clf()
         plt.plot(self.steps[1:], returns_smooth)
-        plt.title('Diamond Collector')
+        plt.title('Zoomer')
         plt.ylabel('Return')
         plt.xlabel('Steps')
         plt.savefig('returns.png')
