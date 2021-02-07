@@ -147,7 +147,7 @@ goalY = random.randint(5,49)
 goalZ = 70
 blocktypeA = "redstone_block"
 my_xml_goal = GenBlock (goalX,goalY,goalZ,"redstone_block")
-my_xml_blockStart = GenBlock (8,24,0,"redstone_block")
+my_xml_blockStart = GenBlock(8,24,1,"obsidian")
     
 def GetMissionXML(pitfall):
     ''' Build an XML mission string that uses the DefaultWorldGenerator.'''
@@ -161,8 +161,6 @@ def GetMissionXML(pitfall):
         <ServerHandlers>
             <FlatWorldGenerator generatorString="3;1*minecraft:lava,1*minecraft:bedrock,1*minecraft:dirt,1*minecraft:sand,1*minecraft:grass"/>
                 <DrawingDecorator>
-                    <DrawBlock x="0" y="4" z="0" type="quartz_block" />
-                    <DrawBlock x="18" y="4" z="58" type="redstone_block" />
                     <DrawCuboid x1="-1" y1="4" z1="-1" x2="16" y2="50" z2="-1" type="wool" colour="BLACK" />
                     <DrawCuboid x1="-1" y1="4" z1="-1" x2="-1" y2="50" z2="100" type="wool" colour="BLACK"/>
                     <DrawCuboid x1="16" y1="4" z1="70" x2="-1" y2="50" z2="70" type="wool" colour="BLACK"/>
@@ -182,7 +180,7 @@ def GetMissionXML(pitfall):
         <AgentSection mode="Survival">
             <Name>Rover</Name>
             <AgentStart>
-                <Placement x="8" y="25" z="0"/>
+                <Placement x="8.5" y="25" z="1"/>
             </AgentStart>
             <AgentHandlers>
                 <ContinuousMovementCommands/>
