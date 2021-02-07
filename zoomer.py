@@ -107,28 +107,6 @@ def GenCuboid(x1, y1, z1, x2, y2, z2, blocktype,color):
     
 def GenBlock(x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
-
-
-obs = ""
-obstacle_number = random.randint(30, 50)
-for i in range(obstacle_number):
-    startx = random.randint(1,57)
-    startz = random.randint(1,57)
-    sizex = random.randint(0,16)
-    yA = random.randint(1,49)
-    #yB = random.randint(1,98)
-    if sizex == 0:
-        sizez = random.randint(5,15)
-        if 58-startz > 28:
-            obs += GenCuboid (startx,yA,startz,startx,yA,startz-sizez,"wool","BLUE")
-        else:
-            obs += GenCuboid (startx,yA,startz,startx,yA,startz+sizez,"wool","BLUE")
-    else:
-        sizez = 0
-        if 58-startx > 28:
-            obs += GenCuboid (startx,yA,startz,startx-sizex,yA,startz,"wool","CYAN")
-        else:
-            obs += GenCuboid (startx,yA,startz,startx+sizex,yA,startz,"wool","CYAN")
     
 def get_observation(world_state):
         obs = np.zeros((2 * self.obs_size * self.obs_size, ))
@@ -166,7 +144,26 @@ def get_observation(world_state):
 #-----------------------------------------------------------------------------------------------------
 def GetMissionXML(summary):
     ''' Build an XML mission string that uses the RewardForCollectingItem mission handler.'''
-    
+    obs = ""
+    obstacle_number = random.randint(30, 50)
+    for i in range(obstacle_number):
+        startx = random.randint(-17,17)
+        startz = random.randint(10,90)
+        sizex = random.randint(0,16)
+        yA = random.randint(1,49)
+        #yB = random.randint(1,98)
+        if sizex == 0:
+            sizez = random.randint(5,15)
+            if 58-startz > 28:
+                obs += GenCuboid (startx,yA,startz,startx,yA,startz-sizez,"wool","BLUE")
+            else:
+                obs += GenCuboid (startx,yA,startz,startx,yA,startz+sizez,"wool","BLUE")
+        else:
+            sizez = 0
+            if 58-startx > 28:
+                obs += GenCuboid (startx,yA,startz,startx-sizex,yA,startz,"wool","CYAN")
+            else:
+                obs += GenCuboid (startx,yA,startz,startx+sizex,yA,startz,"wool","CYAN")
     return '''<?xml version="1.0" encoding="UTF-8" ?>
     <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <About>
