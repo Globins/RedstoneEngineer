@@ -57,7 +57,7 @@ class Zoomer(gym.Env):
         }
 
         # Rllib Parameters
-        self.action_space = Box(-1,1, shape = (3,), dtype = np.float32)
+        self.action_space = Box(-.33,.33, shape = (3,), dtype = np.float32)
         self.observation_space = Box(0, 1, shape=(2 * self.obs_size * self.obs_size, ), dtype=np.float32)
 
         # Malmo Parameters
@@ -123,12 +123,10 @@ class Zoomer(gym.Env):
         # Get Action
         print(action)
         if action[2] > 0:
-            self.agent_host.sendCommand('pitch 0')
-            self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
             self.agent_host.sendCommand('use 1')
-            time.sleep(2)
-        else:
             self.agent_host.sendCommand('use 0')
+
+        else:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
             self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
             time.sleep(.2)
@@ -161,6 +159,7 @@ class Zoomer(gym.Env):
         
     def GenBlock(self, x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
+    
 
 #-----------------------------------------------------------------------------------------------------
     def GetMissionXML(self, summary):
@@ -179,11 +178,9 @@ class Zoomer(gym.Env):
         checkptNum = [20, 35, 50, 65, 80, 90]
         checkptReward = ""
         for z in checkptNum:
-            for x in range(xCheck):
+            for x in range(-xCheck, xCheck):
                 for y in range(yCheck):
-                    checkptReward += '<Marker XPos ="' + str(x) + '" YPos ="' + str(y) + '" ZPos ="' + str(z) + '"reward="1" />'
-
-
+                    checkptReward += '<Marker> <PointWithReward x ="' + str(x) + '" y ="' + str(y) + '" z ="' + str(z) + '"reward="1"/> <Marker/>'
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
@@ -191,6 +188,12 @@ class Zoomer(gym.Env):
             </About>
 
             <ServerSection>
+                <ServerInitialConditions>
+                  <Time>
+                    <StartTime>12000</StartTime>
+                    <AllowPassageOfTime>false</AllowPassageOfTime>
+                  </Time>
+                </ServerInitialConditions>
                 <ServerHandlers>
                     <FlatWorldGenerator generatorString="3;7,2*3,2;1;" />
                     <DrawingDecorator>
@@ -199,7 +202,7 @@ class Zoomer(gym.Env):
                         <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
-                        <DrawCuboid x1="-17" y1="0" z1="100" x2="16" y2="0" z2="-5" type="lava"/>
+                        <DrawCuboid x1="-17" y1="0" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
                         <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                         <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
                         '''+obsString+'''
@@ -216,7 +219,10 @@ class Zoomer(gym.Env):
                 <AgentStart>
                     <Placement x="0.5" y="15.0" z="0.5"/>
                     <Inventory>
+                    <InventoryItem slot='36' type='diamond_boots'/>
+                    <InventoryItem slot='37' type='diamond_leggings'/>
                     <InventoryItem slot='38' type='elytra'/>
+                    <InventoryItem slot='39' type='diamond_helmet'/>
                     </Inventory>
                 </AgentStart>
                 <AgentHandlers>
@@ -232,19 +238,10 @@ class Zoomer(gym.Env):
                     ''' + self.video_requirements + '''
                     <RewardForTouchingBlockType>
                         <Block type="lava" reward="-1" />
-                    </RewardForTouchingBlockType>
-                    <RewardForTouchingBlockType>
-                        <Block type="redstone" reward="10" />
-                    </RewardForTouchingBlockType>
-                    <RewardForTouchingBlockType>
+                        <Block type="redstone_block" reward="10" />
                         <Block type="obsidian" reward="-5" />
-                    </RewardForTouchingBlockType>
-                    <RewardForTouchingBlockType>
                         <Block type="wool" reward="-1" />
                     </RewardForTouchingBlockType>
-                    <RewardForReachingPosition>
-                    ''' + checkptReward + '''
-                    </RewardForReachingPosition>
                 </AgentHandlers>
             </AgentSection>
 
@@ -284,7 +281,6 @@ class Zoomer(gym.Env):
     def launch(self, agent_host):
         minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
         minecraftWin.activate()
-        
         agent_host.sendCommand("jump 1")
         agent_host.sendCommand("move 1")
         time.sleep(.5)
