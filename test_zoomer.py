@@ -232,6 +232,18 @@ class Zoomer(gym.Env):
                     </ObservationFromGrid>
                     <ObservationFromFullInventory/>
                     ''' + self.video_requirements + '''
+                    <RewardForTouchingBlockType>
+                        <Block type="lava" reward="-1" />
+                    </RewardForTouchingBlockType>
+                    <RewardForTouchingBlockType>
+                        <Block type="redstone" reward="10" />
+                    </RewardForTouchingBlockType>
+                    <RewardForTouchingBlockType>
+                        <Block type="obsidian" reward="-5" />
+                    </RewardForTouchingBlockType>
+                    <RewardForTouchingBlockType>
+                        <Block type="wool" reward="-1" />
+                    </RewardForTouchingBlockType>
                 </AgentHandlers>
             </AgentSection>
 
@@ -271,6 +283,7 @@ class Zoomer(gym.Env):
     def launch(self, agent_host):
         minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
         minecraftWin.activate()
+        
         agent_host.sendCommand("jump 1")
         agent_host.sendCommand("move 1")
         time.sleep(.5)
