@@ -121,14 +121,15 @@ class Zoomer(gym.Env):
             info: <dict> dictionary of extra information
         """
         # Get Action
+        print(action)
         if action[2] > 0:
-            self.agent_host.sendCommand('move 1')
+            self.agent_host.sendCommand('pitch 0')
             self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
             self.agent_host.sendCommand('use 1')
             time.sleep(2)
         else:
             self.agent_host.sendCommand('use 0')
-            self.agent_host.sendCommand('move 1'.format(action[0]))
+            self.agent_host.sendCommand('pitch {}'.format(action[0]))
             self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
             time.sleep(.2)
         self.episode_step +=1
@@ -196,11 +197,11 @@ class Zoomer(gym.Env):
                     <FlatWorldGenerator generatorString="3;7,2*3,2;1;" />
                     <DrawingDecorator>
                         <DrawCuboid x1="-100" y1="4" z1="-100" x2="100" y2="50" z2="100" type="air"/>
-                        <DrawCuboid x1="-16" y1="4" z1="-5" x2="16" y2="50" z2="-5" type="wool" colour="BLACK" />
-                        <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="wool" colour="BLACK"/>
-                        <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="wool" colour="BLACK"/>
+                        <DrawCuboid x1="-16" y1="4" z1="-5" x2="16" y2="50" z2="-5" type="obsidian" />
+                        <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="obsidian"/>
+                        <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
-                        <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="4" z2="-5" type="lava"/>
+                        <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
                         <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                         <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
                         '''+obs+'''
@@ -215,7 +216,7 @@ class Zoomer(gym.Env):
             <AgentSection mode="Creative">
                 <Name>Wright</Name>
                 <AgentStart>
-                    <Placement x="0" y="15.0" z="0"/>
+                    <Placement x="0.5" y="15.0" z="0.5"/>
                     <Inventory>
                     <InventoryItem slot='38' type='elytra'/>
                     </Inventory>
@@ -339,7 +340,6 @@ class Zoomer(gym.Env):
         world_state = self.agent_host.getWorldState()
         while not world_state.has_mission_begun:
             time.sleep(0.1)
-            self.initialize_inventory(self.agent_host)
             world_state = self.agent_host.getWorldState()
             for error in world_state.errors:
                 print("Error:",error.text)
@@ -347,12 +347,13 @@ class Zoomer(gym.Env):
 
         # main loop:
         print("Starting Flight")
-        
+        self.initialize_inventory(self.agent_host)
+        self.launch(self.agent_host)
             
         # mission has ended.
         
         
-        #time.sleep(0.5) # Give the mod a little time to prepare for the next mission.
+        time.sleep(0.5) # Give the mod a little time to prepare for the next mission.
         
         return world_state
 
