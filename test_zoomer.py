@@ -201,7 +201,7 @@ class Zoomer(gym.Env):
                         <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
-                        <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
+                        <DrawCuboid x1="-17" y1="0" z1="100" x2="16" y2="0" z2="-5" type="lava"/>
                         <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                         <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
                         '''+obs+'''
