@@ -161,31 +161,29 @@ class Zoomer(gym.Env):
         
     def GenBlock(self, x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
-    
 
 #-----------------------------------------------------------------------------------------------------
     def GetMissionXML(self, summary):
         ''' Build an XML mission string that uses the RewardForCollectingItem mission handler.'''
-        obs = ""
-        obstacle_number = random.randint(30, 50)
-        for i in range(obstacle_number):
-            startx = random.randint(-17,17)
-            startz = random.randint(10,90)
-            sizex = random.randint(0,16)
+        obsString = ""
+
+        obstacleNum = [21, 36, 51, 66, 81, 91]
+        for i in obstacleNum:
+            xA = random.randint(0,16)
+            xB = random.randint(0,16)
             yA = random.randint(1,49)
-            #yB = random.randint(1,98)
-            if sizex == 0:
-                sizez = random.randint(5,15)
-                if 58-startz > 28:
-                    obs += self.GenCuboid (startx,yA,startz,startx,yA,startz-sizez,"wool","BLUE")
-                else:
-                    obs += self.GenCuboid (startx,yA,startz,startx,yA,startz+sizez,"wool","BLUE")
-            else:
-                sizez = 0
-                if 58-startx > 28:
-                    obs += self.GenCuboid (startx,yA,startz,startx-sizex,yA,startz,"wool","CYAN")
-                else:
-                    obs += self.GenCuboid (startx,yA,startz,startx+sizex,yA,startz,"wool","CYAN")
+            obsString += '<DrawCuboid x1="' + str(xA) + '" y1="' + str(yA) + '" z1="' + str(i) + '" x2="' + str(xB) + '" y2="' + str(yA) + '" z2="' + str(i) + '" type="wool" colour="BLUE"/>'
+
+        yCheck = 50
+        xCheck = 16
+        checkptNum = [20, 35, 50, 65, 80, 90]
+        checkptReward = ""
+        for z in checkptNum:
+            for x in range(xCheck):
+                for y in range(yCheck):
+                    checkptReward += '<Marker XPos ="' + str(x) + '" YPos ="' + str(y) + '" ZPos ="' + str(z) + '"reward="1" />'
+
+
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
@@ -204,7 +202,7 @@ class Zoomer(gym.Env):
                         <DrawCuboid x1="-17" y1="0" z1="100" x2="16" y2="0" z2="-5" type="lava"/>
                         <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                         <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
-                        '''+obs+'''
+                        '''+obsString+'''
 
                         <DrawEntity x="0" y="5" z="0" type="Cow" yaw="0"/>
                     </DrawingDecorator>
@@ -244,6 +242,9 @@ class Zoomer(gym.Env):
                     <RewardForTouchingBlockType>
                         <Block type="wool" reward="-1" />
                     </RewardForTouchingBlockType>
+                    <RewardForReachingPosition>
+                    ''' + checkptReward + '''
+                    </RewardForReachingPosition>
                 </AgentHandlers>
             </AgentSection>
 
