@@ -122,9 +122,9 @@ class Zoomer(gym.Env):
             info: <dict> dictionary of extra information
         """
         # Get Action
-        if action[2] > 0:
+        if self.allow_move_action:
+            self.agent_host.sendCommand('pitch 0.5')
             self.boost()
-
         else:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
             self.agent_host.sendCommand('turn {}'.format(action[1]))
