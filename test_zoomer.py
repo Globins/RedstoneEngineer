@@ -57,7 +57,7 @@ class Zoomer(gym.Env):
         }
 
         # Rllib Parameters
-        self.action_space = Box(-.33,.33, shape = (3,), dtype = np.float32)
+        self.action_space = Box(-.15,.15, shape = (3,), dtype = np.float32)
         self.observation_space = Box(0, 1, shape=(2 * self.obs_size * self.obs_size, ), dtype=np.float32)
 
         # Malmo Parameters
@@ -104,9 +104,9 @@ class Zoomer(gym.Env):
             self.log_returns()
 
         # Get Observation
-        self.obs, self.allow_move_action = self.get_observation(world_state)
+        self.obs = self.get_observation(world_state)
         
-        return self.obs, self.allow_move_action
+        return self.obs
 
     def step(self, action):
         """
@@ -122,14 +122,13 @@ class Zoomer(gym.Env):
             info: <dict> dictionary of extra information
         """
         # Get Action
-        print(action)
         if action[2] > 0:
             self.agent_host.sendCommand('use 1')
             self.agent_host.sendCommand('use 0')
 
         else:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
-            self.agent_host.sendCommand('turn {:30.1f}'.format(action[1]))
+            self.agent_host.sendCommand('turn {}'.format(action[1]))
             time.sleep(.2)
         self.episode_step +=1
         
@@ -138,7 +137,7 @@ class Zoomer(gym.Env):
         world_state = self.agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
-        self.obs, self.allow_move_action = self.get_observation(world_state) 
+        self.obs = self.get_observation(world_state) 
 
         # Get Done
         done = not world_state.is_mission_running 
@@ -148,7 +147,8 @@ class Zoomer(gym.Env):
         for r in world_state.rewards:
             reward += r.getValue()
         self.episode_return += reward
-
+        print("REWARD" 
+            + str(reward))
         return self.obs, reward, done, dict()
 
     
@@ -169,10 +169,11 @@ class Zoomer(gym.Env):
 
         obstacleNum = [21, 36, 51, 66, 81, 91]
         for i in obstacleNum:
-            xA = random.randint(0,16)
-            xB = random.randint(0,16)
-            yA = random.randint(1,49)
-            obsString += '<DrawCuboid x1="' + str(xA) + '" y1="' + str(yA) + '" z1="' + str(i) + '" x2="' + str(xB) + '" y2="' + str(yA) + '" z2="' + str(i) + '" type="wool" colour="BLUE"/>'
+            for _ in range(random.randint(1,10)):
+                xA = random.randint(-16,16)
+                xB = random.randint(-16,16)
+                yA = random.randint(1,49)
+                obsString += '<DrawCuboid x1="' + str(xA) + '" y1="' + str(yA) + '" z1="' + str(i) + '" x2="' + str(xB) + '" y2="' + str(yA) + '" z2="' + str(i) + '" type="wool" colour="BLUE"/>'
 
         yCheck = 50
         xCheck = 16
@@ -181,7 +182,7 @@ class Zoomer(gym.Env):
         for z in checkptNum:
             for x in range(-xCheck, xCheck):
                 for y in range(yCheck):
-                    checkptReward += '<Marker x="' + str(x) + '" y="' + str(y) + '" z="' + str(z) + '" reward="1" tolerance="0" />'
+                    checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, z, 1, 0)
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
@@ -203,7 +204,7 @@ class Zoomer(gym.Env):
                         <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="obsidian"/>
                         <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
-                        <DrawCuboid x1="-17" y1="0" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
+                        <DrawCuboid x1="-17" y1="1" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
                         <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
                         <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
                         '''+obsString+'''
@@ -218,7 +219,7 @@ class Zoomer(gym.Env):
             <AgentSection mode="Creative">
                 <Name>Wright</Name>
                 <AgentStart>
-                    <Placement x="0.5" y="15.0" z="0.5"/>
+                    <Placement x="0.9" y="15.0" z="0.9"/>
                     <Inventory>
                     <InventoryItem slot='36' type='diamond_boots'/>
                     <InventoryItem slot='37' type='diamond_leggings'/>
@@ -241,7 +242,7 @@ class Zoomer(gym.Env):
                     ''' + self.video_requirements + '''
                     <RewardForTouchingBlockType>
                         <Block type="lava" reward="-1" />
-                        <Block type="redstone_block" reward="10" />
+                        <Block type="redstone_block" reward="100" />
                         <Block type="obsidian" reward="-5" />
                         <Block type="wool" reward="-1" />
                         <Block type="glass" reward="-10" />
@@ -250,8 +251,8 @@ class Zoomer(gym.Env):
                         ''' + checkptReward + '''
                     </RewardForReachingPosition>
                     <AgentQuitFromTouchingBlockType>
-                        <Block type="redstone block"/>
-                    </AgentQuitFromTouchingBlockType
+                        <Block type="redstone_block"/>
+                    </AgentQuitFromTouchingBlockType>
                 </AgentHandlers>
             </AgentSection>
 
@@ -392,7 +393,7 @@ class Zoomer(gym.Env):
                 grid = observations['floorAll']
            
                 for i, x in enumerate(grid):
-                    obs[i] = x == "lava" or x == "obsidian" or x == "wool" or x == "glass"
+                    obs[i] = x == 'air' 
 
                 obs = obs.reshape((2, self.obs_size, self.obs_size))
                 
@@ -403,12 +404,12 @@ class Zoomer(gym.Env):
                 #     obs = np.rot90(obs, k=2, axes=(1, 2))
                 # elif yaw >= 45 and yaw < 135:
                 #     obs = np.rot90(obs, k=3, axes=(1, 2))
-                allow_move_action = observation['LineOfSight']['type'] == "lava" or observation['LineOfSight']['type'] == "obsidian" or observation['LineOfSight']['type'] == "wool" or observation['LineOfSight']['type'] == "glass"
+
                 obs = obs.flatten()
                 
                 break
 
-        return obs, allow_move_action
+        return obs
 
 
     def log_returns(self):
