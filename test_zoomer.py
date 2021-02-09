@@ -180,7 +180,7 @@ class Zoomer(gym.Env):
         for z in checkptNum:
             for x in range(-xCheck, xCheck):
                 for y in range(yCheck):
-                    checkptReward += '<Marker x ="' + str(x) + '" y="' + str(y) + '" z="' + str(z) + '" reward="1" tolerance="0" />'
+                    checkptReward += '<Marker x="' + str(x) + '" y="' + str(y) + '" z="' + str(z) + '" reward="1" tolerance="0" />'
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
