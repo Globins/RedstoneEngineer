@@ -123,8 +123,7 @@ class Zoomer(gym.Env):
         """
         # Get Action
         if action[2] > 0:
-            self.agent_host.sendCommand('use 1')
-            self.agent_host.sendCommand('use 0')
+            self.boost()
 
         else:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
@@ -138,7 +137,6 @@ class Zoomer(gym.Env):
         for error in world_state.errors:
             print("Error:", error.text)
         self.obs, self.allow_move_action = self.get_observation(world_state) 
-
         # Get Done
         done = not world_state.is_mission_running 
 
@@ -270,30 +268,31 @@ class Zoomer(gym.Env):
         return goals
 
     #ELYTRA------------------------------------------------------------------------------------------------
-    def initialize_inventory(self, agent_host):
+    def initialize_inventory(self):
         for i in range(0, 36):
-            agent_host.sendCommand("chat /give @p fireworks 64 0 {Fireworks:{Flight:1}}")
-        agent_host.sendCommand("chat /gamemode 0")
+            self.agent_host.sendCommand("chat /give @p fireworks 64 0 {Fireworks:{Flight:1}}")
+        self.agent_host.sendCommand("chat /gamemode 0")
 
-    def boost(self,obs, agent_host):
-        self.checkRocketPosition(obs, agent_host)
-        agent_host.sendCommand("use 1")
+    def boost(self):
+        self.agent_host.sendCommand("use 1")
+        self.agent_host.sendCommand("use 0")
 
-    def checkRocketPosition(self, obs, agent_host):
+    def checkRocketPosition(self, obs):
         '''Make sure our rockets, if we have any, is in slot 0.'''
         for i in range(1,39):
             key = 'InventorySlot_'+str(i)+'_item'
             if key in obs:
                 item = obs[key]
+                print(item == 'fireworks')
                 if item == 'fireworks':
-                    agent_host.sendCommand("swapInventoryItems 0 " + str(i))
+                    self.agent_host.sendCommand("swapInventoryItems 0 " + str(i))
                     return
 
-    def launch(self, agent_host):
+    def launch(self):
         minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
         minecraftWin.activate()
-        agent_host.sendCommand("jump 1")
-        agent_host.sendCommand("move 1")
+        self.agent_host.sendCommand("jump 1")
+        self.agent_host.sendCommand("move 1")
         time.sleep(.5)
         pyautogui.press('enter')
         pyautogui.keyDown('space')
@@ -368,8 +367,8 @@ class Zoomer(gym.Env):
 
         # main loop:
         print("Starting Flight")
-        self.initialize_inventory(self.agent_host)
-        self.launch(self.agent_host)
+        self.initialize_inventory()
+        self.launch()
             
         # mission has ended.
         
@@ -407,6 +406,7 @@ class Zoomer(gym.Env):
                 obs = obs.flatten()
                 if('LineOfSight' in observations):
                     allow_move_action = observations['LineOfSight']['type'] == "lava" or observations['LineOfSight']['type'] == "obsidian" or observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "glass"
+                self.checkRocketPosition(observations)
                 break
 
         return obs, allow_move_action
