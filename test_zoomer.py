@@ -72,6 +72,7 @@ class Zoomer(gym.Env):
 
         # DiamondCollector Parameters
         self.obs = None
+        self.allow_move_action = False
         self.episode_step = 0
         self.episode_return = 0
         self.returns = []
@@ -103,9 +104,9 @@ class Zoomer(gym.Env):
             self.log_returns()
 
         # Get Observation
-        self.obs = self.get_observation(world_state)
+        self.obs, self.allow_move_action = self.get_observation(world_state)
         
-        return self.obs
+        return self.obs, self.allow_move_action
 
     def step(self, action):
         """
@@ -137,7 +138,7 @@ class Zoomer(gym.Env):
         world_state = self.agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
-        self.obs = self.get_observation(world_state) 
+        self.obs, self.allow_move_action = self.get_observation(world_state) 
 
         # Get Done
         done = not world_state.is_mission_running 
@@ -228,6 +229,8 @@ class Zoomer(gym.Env):
                 <AgentHandlers>
                     <ContinuousMovementCommands turnSpeedDegs="480"/>
                     <ChatCommands/>
+                    <ObservationFromFullStats/>
+                    <ObservationFromRay/>
                     <ObservationFromGrid>
                         <Grid name="floorAll">
                             <min x="-'''+str(int(self.obs_size/2))+'''" y="-1" z="-'''+str(int(self.obs_size/2))+'''"/>
@@ -389,7 +392,7 @@ class Zoomer(gym.Env):
                 grid = observations['floorAll']
            
                 for i, x in enumerate(grid):
-                    obs[i] = x == 'air' 
+                    obs[i] = x == "lava" or x == "obsidian" or x == "wool" or x == "glass"
 
                 obs = obs.reshape((2, self.obs_size, self.obs_size))
                 
@@ -400,12 +403,12 @@ class Zoomer(gym.Env):
                 #     obs = np.rot90(obs, k=2, axes=(1, 2))
                 # elif yaw >= 45 and yaw < 135:
                 #     obs = np.rot90(obs, k=3, axes=(1, 2))
-
+                allow_move_action = observation['LineOfSight']['type'] == "lava" or observation['LineOfSight']['type'] == "obsidian" or observation['LineOfSight']['type'] == "wool" or observation['LineOfSight']['type'] == "glass"
                 obs = obs.flatten()
                 
                 break
 
-        return obs
+        return obs, allow_move_action
 
 
     def log_returns(self):
