@@ -57,7 +57,7 @@ class Zoomer(gym.Env):
         }
 
         # Rllib Parameters
-        self.action_space = Box(-.15,.15, shape = (3,), dtype = np.float32)
+        self.action_space = Box(-.05,.05, shape = (3,), dtype = np.float32)
         self.observation_space = Box(0, 1, shape=(2 * self.obs_size * self.obs_size, ), dtype=np.float32)
 
         # Malmo Parameters
@@ -121,14 +121,14 @@ class Zoomer(gym.Env):
             done: <bool> indicates terminal state
             info: <dict> dictionary of extra information
         """
-        # Get Action
-        if self.allow_move_action:
-            self.agent_host.sendCommand('pitch 0.5')
-            self.boost()
-        else:
+        # Get Action 
+
+        if self.allow_move_action or action[2] < 0:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
             self.agent_host.sendCommand('turn {}'.format(action[1]))
             time.sleep(.2)
+        else:
+            self.boost()
         self.episode_step +=1
         
 
@@ -170,7 +170,7 @@ class Zoomer(gym.Env):
             for _ in range(random.randint(1,10)):
                 xA = random.randint(-16,16)
                 xB = random.randint(-16,16)
-                yA = random.randint(1,49)
+                yA = random.randint(6,49)
                 obsString += '<DrawCuboid x1="' + str(xA) + '" y1="' + str(yA) + '" z1="' + str(i) + '" x2="' + str(xB) + '" y2="' + str(yA) + '" z2="' + str(i) + '" type="wool" colour="BLUE"/>'
 
         yCheck = 50
@@ -219,10 +219,7 @@ class Zoomer(gym.Env):
                 <AgentStart>
                     <Placement x="0.9" y="15.0" z="0.9"/>
                     <Inventory>
-                    <InventoryItem slot='36' type='diamond_boots'/>
-                    <InventoryItem slot='37' type='diamond_leggings'/>
                     <InventoryItem slot='38' type='elytra'/>
-                    <InventoryItem slot='39' type='diamond_helmet'/>
                     </Inventory>
                 </AgentStart>
                 <AgentHandlers>
@@ -239,11 +236,11 @@ class Zoomer(gym.Env):
                     <ObservationFromFullInventory/>
                     ''' + self.video_requirements + '''
                     <RewardForTouchingBlockType>
-                        <Block type="lava" reward="-1" />
-                        <Block type="redstone_block" reward="100" />
-                        <Block type="obsidian" reward="-5" />
-                        <Block type="wool" reward="-1" />
-                        <Block type="glass" reward="-10" />
+                        <Block type="lava" reward="-50" />
+                        <Block type="redstone_block" reward="1000" />
+                        <Block type="obsidian" reward="-50" />
+                        <Block type="wool" reward="-10" />
+                        <Block type="glass" reward="-50" />
                     </RewardForTouchingBlockType>
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
@@ -269,9 +266,19 @@ class Zoomer(gym.Env):
 
     #ELYTRA------------------------------------------------------------------------------------------------
     def initialize_inventory(self):
+        self.agent_host.sendCommand("chat /gamemode 0")
+        self.agent_host.sendCommand("chat /give @p diamond_helmet 1 0 {ench:[{id:0,lvl:4},{id:34,lvl:3}]}")
+        self.agent_host.sendCommand("use 1")
+        time.sleep(.2)
+        self.agent_host.sendCommand("chat /give @p diamond_leggings 1 0 {ench:[{id:0,lvl:4},{id:34,lvl:3}]}")
+        self.agent_host.sendCommand("use 1")
+        time.sleep(.2)
+        self.agent_host.sendCommand("chat /give @p diamond_boots 1 0 {ench:[{id:0,lvl:4},{id:34,lvl:3}]}")
+        self.agent_host.sendCommand("use 1")
+        time.sleep(.2)
         for i in range(0, 36):
             self.agent_host.sendCommand("chat /give @p fireworks 64 0 {Fireworks:{Flight:1}}")
-        self.agent_host.sendCommand("chat /gamemode 0")
+
 
     def boost(self):
         self.agent_host.sendCommand("use 1")
@@ -393,7 +400,7 @@ class Zoomer(gym.Env):
                 grid = observations['floorAll']
            
                 for i, x in enumerate(grid):
-                    obs[i] = x == "lava" or x == "obsidian" or x == "wool" or x == "glass" 
+                    obs[i] = x == "wool" or x == "lava"
                 obs = obs.reshape((2, self.obs_size, self.obs_size))
                 
                 # yaw = observations['Yaw']
@@ -405,7 +412,7 @@ class Zoomer(gym.Env):
                 #     obs = np.rot90(obs, k=3, axes=(1, 2))
                 obs = obs.flatten()
                 if('LineOfSight' in observations):
-                    allow_move_action = observations['LineOfSight']['type'] == "lava" or observations['LineOfSight']['type'] == "obsidian" or observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "glass"
+                    allow_move_action = observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "lava"
                 self.checkRocketPosition(observations)
                 break
 
