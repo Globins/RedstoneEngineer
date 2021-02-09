@@ -246,6 +246,9 @@ class Zoomer(gym.Env):
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
                     </RewardForReachingPosition>
+                    <AgentQuitFromTouchingBlockType>
+                        <Block type="redstone block"/>
+                    </AgentQuitFromTouchingBlockType
                 </AgentHandlers>
             </AgentSection>
 
