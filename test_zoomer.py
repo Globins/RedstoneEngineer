@@ -241,6 +241,7 @@ class Zoomer(gym.Env):
                         <Block type="redstone_block" reward="10" />
                         <Block type="obsidian" reward="-5" />
                         <Block type="wool" reward="-1" />
+                        <Block type="glass" reward="-10" />
                     </RewardForTouchingBlockType>
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
