@@ -380,6 +380,7 @@ class Zoomer(gym.Env):
 
     def get_observation(self, world_state):
         obs = np.zeros((2 * self.obs_size * self.obs_size, ))
+        allow_move_action = False
         while world_state.is_mission_running:
             time.sleep(0.3)
             world_state = self.agent_host.getWorldState()
