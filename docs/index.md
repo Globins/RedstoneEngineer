@@ -3,7 +3,7 @@ layout: default
 title:  Home
 ---
 
-<h3>[Source code](https://github.com/Globins/Zoomer)</h3>
+**[Github Source code](https://github.com/Globins/Zoomer)**
 
 <h4>Team Members: Gordon Lobins, Lin Alsabbagh, Sohum Sheth</h4>
 
