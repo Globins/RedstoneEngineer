@@ -21,9 +21,10 @@ For our quantitative evaluation, we decided to use the reward counter since that
 ![Figure 1](zoomer_graph_1.jpg)
 ![Figure 2](zoomer_graph_2.jpg)
 
-For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In the first video below, you can see the agent crashing immediately into the lava. In the second video, after changing the pitch, our agent was able to react more positively to the obstacles.
+For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In the first video below, you can see the agent crashing immediately into the lava. In the second video, after changing the pitch, our agent was able to react more positively to the obstacles by avoiding them.
 
-![Alt Text](https://media.giphy.com/media/CNWDGkhmbiGpNUWV5Y/giphy.gif)
+![](https://media.giphy.com/media/CNWDGkhmbiGpNUWV5Y/giphy.gif)
+![](https://media.giphy.com/media/boW7I8waJeu4RQDeM8/giphy.gif)
 
 <h2>Remaining Goals and Challenges:</h2>
 
@@ -31,6 +32,7 @@ For our qualitative evaluation, we are analyzing the response time the agent has
 Because our AI is not improving/learning at the rate we would like it to, one of our primary goals for the final report is to improve the rate of the reinforcement learning of Zoomer to ensure it is always (or almost always) improving as it goes through the course whether it reaches its goal or dies. 
 For at least part of the next few weeks we would like to experiment with different methods and techniques that might allow us to improve our player’s reinforcement learning. One of these would be to test out possibly using a video recording to recognize objects and allow the agent to dodge them in mid-air. 
 And of course, over the next few weeks we would like to have our player run for longer periods of time in order to sufficiently evaluate our methods and determine the best reinforcement learning techniques for our project before final presentations. 
+
 
 
 <h4>Challenges:</h4>
