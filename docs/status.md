@@ -53,7 +53,3 @@ We based our initial reinforcement learning approach/implementation on that prov
 
 Additionally, we used the “pyautogui” and “pygetwindow” libraries to activate the elytra as Malmo could not send the jump output long enough for the wings to activate.
 
-[pyautogui](https://pyautogui.readthedocs.io/en/latest/)
-[pygetwindow](https://pypi.org/project/PyGetWindow/)
-
-
