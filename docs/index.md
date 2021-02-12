@@ -15,7 +15,8 @@ The goal for our project is to create an agent that can reach the end of an obst
 
 <h3>Reports:</h3>
 
-- <p><a href="proposal.html"><font size="5">Github Source Code</font></a></p> 
-- [Status](status.html)
-- [Final](final.html)
+- <p><a href="proposal.html"><font size="5">Proposal</font></a></p> 
+- <p><a href="status.html"><font size="5">Status</font></a></p> 
+- <p><a href="final.html"><font size="5">Final</font></a></p>  
+
 
