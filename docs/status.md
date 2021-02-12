@@ -51,8 +51,8 @@ Because the way the checkpoints are generated, as a wall of PointWithRewards, th
 <h2>Resources Used:</h2>
 We based our initial reinforcement learning approach/implementation on that provided to us in Assignment #2 (which uses the library “rllib”), which we modified to work with our project. We used the XML Schema and Project Malmo code documentation to help with writing our code. 
 
-Additionally, we used the “pyautogui” and “pygetwindow” libraries to activate the elytra as Malmo could not send the jump output long enough for the wings to activate.
-pyautogui: <a href="url">"https://pyautogui.readthedocs.io/en/latest/"</a>
+Additionally, we used the “pyautogui” and “pygetwindow” libraries to activate the elytra as Malmo could not send the jump output long enough for the wings to activate.<br>
+pyautogui: <a href="url">"https://pyautogui.readthedocs.io/en/latest/"</a><br>
 pygetwindow: <a href="url">"https://pypi.org/project/PyGetWindow/"</a>
 
 
