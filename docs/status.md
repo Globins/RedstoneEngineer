@@ -18,13 +18,12 @@ Finally, it is important to add negative rewards if the agent doesn’t perform 
 <h2>Evaluation:</h2>
 For our quantitative evaluation, we decided to use the reward counter since that would give us an overview of how the agent was performing over a certain period of time. Currently, we have a working agent that gets to the end of the obstacle course occasionally, but dies other times. Below, you can see two graphs highlighting the reward improvement over the course of 1000 steps and over the course of 2500 steps. While the agent tends to have negative rewards sometimes, we can already see an upward trend leading towards the positive side. Once we start training the agent for longer periods of time, we can expect to see a more stable positive reward.
 
-<h5>Figure 1                                                                Figure 2</h5>
 <img src="zoomer_graph_1.jpg" width="500" height="500"/>
 <img src="zoomer_graph_2.jpg" width="500" height="500"/>
 
 For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In the first video below, you can see the agent crashing immediately into the lava. In the second video, after changing the pitch, our agent was able to react more positively to the obstacles by avoiding them.
 
-<h5>Video 1                                                                Video 2</h5>
+
 ![](https://media.giphy.com/media/CNWDGkhmbiGpNUWV5Y/giphy.gif)
 ![](https://media.giphy.com/media/boW7I8waJeu4RQDeM8/giphy.gif)
 
