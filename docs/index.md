@@ -3,7 +3,6 @@ layout: default
 title:  Home
 ---
 
-**[Github Source Code](https://github.com/Globins/Zoomer)**
 <p><a href="https://github.com/Globins/Zoomer"><font size="5">Github Source Code</font></a></p>
 
 
@@ -16,7 +15,7 @@ The goal for our project is to create an agent that can reach the end of an obst
 
 <h3>Reports:</h3>
 
-- [Proposal](proposal.html)
+- <p><a href="proposal.html"><font size="5">Github Source Code</font></a></p> 
 - [Status](status.html)
 - [Final](final.html)
 
