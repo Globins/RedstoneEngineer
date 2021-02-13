@@ -3,7 +3,7 @@ layout: default
 title:  Status
 ---
 <h1>Video</h1>
-<video width="320" height="240" controls>
+<video width="500" height="500" controls>
   <source src="CS 175 Project Zoomer - Small.mov" type="video/mp4">
 </video>
 
