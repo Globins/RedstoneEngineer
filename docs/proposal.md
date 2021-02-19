@@ -24,7 +24,7 @@ title: Proposal
 <b> Moonshot Case: </b>
         Our agent will be able to navigate through obstacles at low visibility (Light = 3 or lower), this will affect how the agent will see and react to certain obstacles.
 
-<b> Weekly Metting Time: </b>
+<b> Weekly Meeting Time: </b>
     We plan on meeting at least once a week at this scheduled time: Fridays at 3:30pm PST + any additional appointments we may need to set up with each other in order to complete the project. 
 
 <b> Status Report Update </b>
