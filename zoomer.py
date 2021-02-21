@@ -159,6 +159,34 @@ class Zoomer(gym.Env):
     def GenBlock(self, x1, y1, z1, blocktype):
         return '<DrawBlock x="' + str(x1) + '" y="' + str(y1) + '" z="' + str(z1) + '" type="' + blocktype + '"/>'
     
+    def line(self, x0, y0, x1, y1):
+        #"Bresenham's line algorithm"
+        points_in_line = []
+        dx = abs(x1 - x0)
+        dy = abs(y1 - y0)
+        x, y = x0, y0
+        sx = -1 if x0 > x1 else 1
+        sy = -1 if y0 > y1 else 1
+        if dx > dy:
+            err = dx / 2.0
+            while x != x1:
+                points_in_line.append((x, y))
+                err -= dy
+                if err < 0:
+                    y += sy
+                    err += dx
+                x += sx
+        else:
+            err = dy / 2.0
+            while y != y1:
+                points_in_line.append((x, y))
+                err -= dx
+                if err < 0:
+                    x += sx
+                    err += dy
+                y += sy
+        points_in_line.append((x, y))
+        return points_in_line
 
 #-----------------------------------------------------------------------------------------------------
     def GetMissionXML(self, summary):
@@ -169,8 +197,9 @@ class Zoomer(gym.Env):
         obstSpawnMaxY = 49
 
         minObstacleAmount = 5
-        maxObstacleAmount = 20
+        maxObstacleAmount = 15
         horizChance = 70
+        diagChance = 15
         obstacleCourseLength = 300
 
         obstacleGap = 10
@@ -188,11 +217,15 @@ class Zoomer(gym.Env):
                 yB = random.randint(obstSpawnMinY,obstSpawnMaxY)
                 roll = random.randint(0,99)
                 #Horizontal
-                if(roll <  horizChance):
+                if(roll <  diagChance):
+                    resultLine = self.line(xA, yA, xB, yB)
+                    for x,y in resultLine:
+                        obsString += "<DrawBlock x = '{}' y = '{}' z = '{}' type='wool' colour='BLUE'/>".format(x, y, loopCount)
+                    
+                elif(roll < horizChance):
                     obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xB, yA, loopCount)
                 else:
                     obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xA, yB, loopCount)
-                #Vertical
 
             for x in range(-courseHalfWidth, courseHalfWidth):
                 for y in range(obstSpawnMaxY):
@@ -271,18 +304,6 @@ class Zoomer(gym.Env):
             </AgentSection>
 
         </Mission>'''
-    #REINFORCEMENT LEARNING, SPAWN CHECKPOINTS, NOT IMPLEMENTED
-    def buildPositionList(self, items):
-        positions=[]
-        for item in items:
-            positions.append((random.randint(-10,10), random.randint(-10,10)))
-        return positions
-    def getSubgoalPositions(self, positions):
-        goals=""
-        for p in positions:
-            goals += '<Point x="' + str(p[0]) + '" y="227" z="' + str(p[1]) + '" tolerance="1" description="Checkpoint" />'
-        return goals
-
     #ELYTRA------------------------------------------------------------------------------------------------
     def initialize_inventory(self):
         self.agent_host.sendCommand("chat /gamemode 0")
