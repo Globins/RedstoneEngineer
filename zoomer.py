@@ -216,12 +216,10 @@ class Zoomer(gym.Env):
                 yA = random.randint(obstSpawnMinY,obstSpawnMaxY)
                 yB = random.randint(obstSpawnMinY,obstSpawnMaxY)
                 roll = random.randint(0,99)
-                #Horizontal
                 if(roll <  diagChance):
                     resultLine = self.line(xA, yA, xB, yB)
                     for x,y in resultLine:
                         obsString += "<DrawBlock x = '{}' y = '{}' z = '{}' type='wool' colour='BLUE'/>".format(x, y, loopCount)
-                    
                 elif(roll < horizChance):
                     obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xB, yA, loopCount)
                 else:
