@@ -163,24 +163,50 @@ class Zoomer(gym.Env):
 #-----------------------------------------------------------------------------------------------------
     def GetMissionXML(self, summary):
         ''' Build an XML mission string that uses the RewardForCollectingItem mission handler.'''
+        courseHalfWidth = 16
+
+        obstSpawnMinY = 6
+        obstSpawnMaxY = 49
+
+        minObstacleAmount = 1
+        maxObstacleAmount = 20
+        horizChance = 70
+        obstacleCourseLength = 300
+
+        obstacleGap = 10
+        obstacleStart = 10
+        playerStart = 0
+        loopCount = obstacleStart
+
         obsString = ""
-
-        obstacleNum = [21, 36, 51, 66, 81, 91]
-        for i in obstacleNum:
-            for _ in range(random.randint(1,10)):
-                xA = random.randint(-16,16)
-                xB = random.randint(-16,16)
-                yA = random.randint(6,49)
-                obsString += '<DrawCuboid x1="' + str(xA) + '" y1="' + str(yA) + '" z1="' + str(i) + '" x2="' + str(xB) + '" y2="' + str(yA) + '" z2="' + str(i) + '" type="wool" colour="BLUE"/>'
-
-        yCheck = 50
-        xCheck = 16
-        checkptNum = [20, 35, 50, 65, 80, 90]
         checkptReward = ""
-        for z in checkptNum:
-            for x in range(-xCheck, xCheck):
-                for y in range(yCheck):
-                    checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, z, 1, 0)
+        while(loopCount < obstacleCourseLength):
+            for _ in range(random.randint(minObstacleAmount,maxObstacleAmount)):
+                xA = random.randint(-courseHalfWidth,courseHalfWidth)
+                xB = random.randint(-courseHalfWidth,courseHalfWidth)
+                yA = random.randint(obstSpawnMinY,obstSpawnMaxY)
+                yB = random.randint(obstSpawnMinY,obstSpawnMaxY)
+                roll = random.randint(0,99)
+                #Horizontal
+                if(roll <  horizChance):
+                    obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xB, yA, loopCount)
+                else:
+                    obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xA, yB, loopCount)
+                #Vertical
+
+            for x in range(-courseHalfWidth, courseHalfWidth):
+                for y in range(obstSpawnMaxY):
+                    checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, loopCount+1, 1, 0)
+            loopCount += obstacleGap
+        obstacleCourseXML = ""
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(courseHalfWidth, 4, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #left wall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth, 4, playerStart-5, -courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #right wall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='glass'/>".format(-courseHalfWidth, obstSpawnMaxY+1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #ceiling
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='lava'/>".format(-courseHalfWidth, 1, playerStart-5, courseHalfWidth, 3, obstacleCourseLength) #floor
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='redstone_block'/>".format(-courseHalfWidth, 4, obstacleCourseLength, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #end wall
+        obstacleCourseXML += "<DrawBlock x='{}'  y='14' z='{}' type='emerald_block'/>".format(playerStart, playerStart)
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
@@ -197,16 +223,7 @@ class Zoomer(gym.Env):
                 <ServerHandlers>
                     <FlatWorldGenerator generatorString="3;7,2*3,2;1;" />
                     <DrawingDecorator>
-                        <DrawCuboid x1="-100" y1="4" z1="-100" x2="100" y2="50" z2="100" type="air"/>
-                        <DrawCuboid x1="-16" y1="4" z1="-5" x2="16" y2="50" z2="-5" type="obsidian" />
-                        <DrawCuboid x1="16" y1="4" z1="-5" x2="16" y2="50" z2="100" type="obsidian"/>
-                        <DrawCuboid x1="-17" y1="4" z1="-5" x2="-17" y2="50" z2="100" type="obsidian"/>
-                        <DrawCuboid x1="-17" y1="50" z1="100" x2="16" y2="50" z2="-5" type="glass"/>
-                        <DrawCuboid x1="-17" y1="1" z1="100" x2="16" y2="3" z2="-5" type="lava"/>
-                        <DrawCuboid x1="-17" y1="4" z1="100" x2="16" y2="50" z2="100" type="redstone_block"/>
-                        <DrawBlock x='0'  y='14' z='0' type='emerald_block' />
-                        '''+obsString+'''
-
+                    ''' + obstacleCourseXML + obsString + '''
                         <DrawEntity x="0" y="5" z="0" type="Cow" yaw="0"/>
                     </DrawingDecorator>
                     <ServerQuitFromTimeUp timeLimitMs="150000"/>
@@ -375,7 +392,7 @@ class Zoomer(gym.Env):
         # main loop:
         print("Starting Flight")
         self.initialize_inventory()
-        self.launch()
+        #self.launch()
             
         # mission has ended.
         
