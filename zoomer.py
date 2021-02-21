@@ -168,7 +168,7 @@ class Zoomer(gym.Env):
         obstSpawnMinY = 6
         obstSpawnMaxY = 49
 
-        minObstacleAmount = 1
+        minObstacleAmount = 5
         maxObstacleAmount = 20
         horizChance = 70
         obstacleCourseLength = 300
@@ -200,13 +200,15 @@ class Zoomer(gym.Env):
             loopCount += obstacleGap
         obstacleCourseXML = ""
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(courseHalfWidth, 4, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #left wall
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth, 4, playerStart-5, -courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #right wall
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='glass'/>".format(-courseHalfWidth, obstSpawnMaxY+1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #ceiling
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='lava'/>".format(-courseHalfWidth, 1, playerStart-5, courseHalfWidth, 3, obstacleCourseLength) #floor
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='redstone_block'/>".format(-courseHalfWidth, 4, obstacleCourseLength, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #end wall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 4, playerStart-5, -courseHalfWidth-1, obstSpawnMaxY+1, obstacleCourseLength) #right wall
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='glass'/>".format(-courseHalfWidth-1, obstSpawnMaxY+1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #ceiling
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='lava'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, 3, obstacleCourseLength) #floor
+        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='redstone_block'/>".format(-courseHalfWidth-1, 4, obstacleCourseLength, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #end wall
         obstacleCourseXML += "<DrawBlock x='{}'  y='14' z='{}' type='emerald_block'/>".format(playerStart, playerStart)
+        
+        playerSpawn = "<Placement x='{}' y='15.0' z='{}'/>".format(playerStart+.5, playerStart+.9)
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <About>
@@ -234,7 +236,7 @@ class Zoomer(gym.Env):
             <AgentSection mode="Creative">
                 <Name>Wright</Name>
                 <AgentStart>
-                    <Placement x="0.9" y="15.0" z="0.9"/>
+                    '''+ playerSpawn + '''
                     <Inventory>
                     <InventoryItem slot='38' type='elytra'/>
                     </Inventory>
@@ -468,20 +470,3 @@ if __name__ == '__main__':
 
     while True:
         print(trainer.train())
-
-# agent_host = MalmoPython.AgentHost()
-# malmoutils.parse_command_line(agent_host)
-# recordingsDirectory = malmoutils.get_recordings_directory(agent_host)
-# video_requirements = '<VideoProducer><Width>860</Width><Height>480</Height></VideoProducer>' if agent_host.receivedArgument("record_video") else ''
-# observation_size = 10
-
-
-#WORLD------------------------------------------------------------------------------------------------
-
-
-
-
-# Create a pool of Minecraft Mod clients.
-# By default, mods will choose consecutive mission control ports, starting at 10000,
-# so running four mods locally should produce the following pool by default (assuming nothing else
-# is using these ports):
