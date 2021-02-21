@@ -28,14 +28,13 @@ import json
 import random
 import errno
 import malmoutils
-import pyautogui
-import pygetwindow as gw
 import gym, ray
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.random import randint
 from gym.spaces import Discrete, Box
 from ray.rllib.agents import ppo
+from sys import platform
 
 
 malmoutils.fix_print()
@@ -334,16 +333,21 @@ class Zoomer(gym.Env):
                     return
 
     def launch(self):
-        minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
-        minecraftWin.activate()
-        self.agent_host.sendCommand("jump 1")
-        self.agent_host.sendCommand("move 1")
-        time.sleep(.5)
-        pyautogui.press('enter')
-        pyautogui.keyDown('space')
-        time.sleep(.15)
-        pyautogui.keyUp('space')
-        pyautogui.press('enter')
+        if (platform == "linux" or platform == "macOS"):
+            pass
+        elif(platform == "win32"):
+            import pyautogui
+            import pygetwindow as gw
+            minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
+            minecraftWin.activate()
+            self.agent_host.sendCommand("jump 1")
+            self.agent_host.sendCommand("move 1")
+            time.sleep(.5)
+            pyautogui.press('enter')
+            pyautogui.keyDown('space')
+            time.sleep(.15)
+            pyautogui.keyUp('space')
+            pyautogui.press('enter')
 
 
     def printInventory(self, obs):
@@ -413,7 +417,7 @@ class Zoomer(gym.Env):
         # main loop:
         print("Starting Flight")
         self.initialize_inventory()
-        #self.launch()
+        self.launch()
             
         # mission has ended.
         
