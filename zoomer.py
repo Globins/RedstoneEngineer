@@ -190,7 +190,7 @@ class Zoomer(gym.Env):
 
 #-----------------------------------------------------------------------------------------------------
     def GetMissionXML(self, summary):
-        ''' Build an XML mission string that uses the RewardForCollectingItem mission handler.'''
+        ''' Build an XML mission string.'''
         courseHalfWidth = 16
 
         obstSpawnMinY = 6
