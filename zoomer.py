@@ -490,6 +490,15 @@ if __name__ == '__main__':
         'num_gpus': 0,              # We aren't using GPUs
         'num_workers': 0            # We aren't using parallelism
     })
+    
+    https://github.com/ray-project/ray/issues/7983
+    #insert path that the training gets saved to
+    # trainer.restore(path)
 
+    i = 0
     while True:
-        print(trainer.train())
+        result = trainer.train()
+        if i%10 == 0: #save every 10th training iteration
+            checkpoint_path = trainer.save()
+            print(checkpoint_path)
+        i+=1
