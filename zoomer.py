@@ -491,7 +491,7 @@ if __name__ == '__main__':
         'num_workers': 0            # We aren't using parallelism
     })
     
-    https://github.com/ray-project/ray/issues/7983
+    #https://github.com/ray-project/ray/issues/7983
     #insert path that the training gets saved to
     # trainer.restore(path)
 
