@@ -104,9 +104,9 @@ class Zoomer(gym.Env):
             len(self.returns) % self.log_frequency == 0:
             self.log_returns()
         
-        if self.iteration_count%10 == 0:
-            checkpoint_path = trainer.save()
-            print(checkpoint_path)
+        # if self.iteration_count%10 == 0:
+        #   checkpoint_path = trainer.save()
+        #   print(checkpoint_path)
         
         self.iteration_count +=1
         
@@ -446,27 +446,24 @@ class Zoomer(gym.Env):
         return world_state
 
     def get_observation(self, world_state):
-        obs = np.zeros((2 * self.obs_size * self.obs_size, ))
+        obs = np.zeros((2 * self.obs_size * self.obs_size, ))  #Change size how big obs box is (volume of box)
         allow_move_action = False
+        yRew = 0
+        zRew = 0
         while world_state.is_mission_running:
             time.sleep(0.3)
             world_state = self.agent_host.getWorldState()
             if len(world_state.errors) > 0:
                 raise AssertionError('Could not load grid.')
-            
-            yRew = 15
-            zRew = 1
-
+                
             if world_state.number_of_observations_since_last_state > 0:
                 msg = world_state.observations[-1].text
                 
                 observations = json.loads(msg)
                 grid = observations['floorAll']
-                zPos = observations['ZPos']
-                yPos = observations['YPos']
+                zRew = observations['ZPos'] #use this instead of checkpoints
+                yRew = observations['YPos'] #append it to the end of obs vari ues this to avoid lava
 
-                yRew = yPos
-                zRew = zPos
 
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool" or x == "lava"
@@ -500,22 +497,23 @@ class Zoomer(gym.Env):
             for step, value in zip(self.steps[1:], self.returns[1:]):
                 f.write("{}\t{}\n".format(step, value)) 
     
-    def train_agent(self):
-        ray.init()
-        self.trainer = ppo.PPOTrainer(env=Zoomer, config={
-            'env_config': {},           # No environment parameters to configure
-            'framework': 'torch',       # Use pyotrch instead of tensorflow
-            'num_gpus': 0,              # We aren't using GPUs
-            'num_workers': 0            # We aren't using parallelism
-        })
-        
-        #https://github.com/ray-project/ray/issues/7983
-        #insert path that the training gets saved to
-        # self.trainer.restore(path)
-
-        while True:
-            result = self.trainer.train()
-            
 if __name__ == '__main__':
-    zoomer = Zoomer()
-    zoomer.train_agent()
+    ray.init()
+    trainer = ppo.PPOTrainer(env=Zoomer, config={
+        'env_config': {},           # No environment parameters to configure
+        'framework': 'torch',       # Use pyotrch instead of tensorflow
+        'num_gpus': 0,              # We aren't using GPUs
+        'num_workers': 0,           # We aren't using parallelism
+    })
+    
+    #https://github.com/ray-project/ray/issues/7983
+    #insert path that the training gets saved to
+    # trainer.restore(path)
+
+    i = 0
+    while True:
+        result = trainer.train()
+        if i%10 == 0: #save every 10th training iteration
+            checkpoint_path = trainer.save()
+            print(checkpoint_path)
+        i+=1
