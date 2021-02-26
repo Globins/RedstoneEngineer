@@ -58,7 +58,7 @@ class Zoomer(gym.Env):
 
         # Rllib Parameters
         self.action_space = Box(-.05,.05, shape = (3,), dtype = np.float32)
-        self.observation_space = Box(0, 1, shape=(((self.obs_size/2) + 1) ** 3,), dtype=np.float32)
+        self.observation_space = Box(0, 1, shape=(int(((self.obs_size/2) + 1) ** 3),), dtype=np.float32)
 
         # Malmo Parameters
         self.agent_host = MalmoPython.AgentHost()
@@ -159,7 +159,7 @@ class Zoomer(gym.Env):
             self.prevZ = zReward
         self.episode_return += reward
         print("REWARD " 
-            + str(zReward))
+            + str(reward))
         return self.obs, reward, done, dict()
 
     
@@ -468,8 +468,6 @@ class Zoomer(gym.Env):
                 zRew = observations['ZPos'] #use this instead of checkpoints
                 yRew = observations['YPos'] #append it to the end of obs vari ues this to avoid lava
 
-                print(len(obs))
-                print(len(grid))
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool"
 
