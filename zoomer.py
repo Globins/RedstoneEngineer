@@ -44,7 +44,7 @@ class Zoomer(gym.Env):
         self.size = 50
         self.reward_density = .1
         self.penalty_density = .02
-        self.obs_size = 5
+        self.obs_size = 60
         self.max_episode_steps = 100
         self.log_frequency = 10
         
@@ -296,8 +296,8 @@ class Zoomer(gym.Env):
                     <ObservationFromRay/>
                     <ObservationFromGrid>
                         <Grid name="floorAll">
-                            <min x="-'''+str(int(self.obs_size/2))+'''" y="-1" z="-'''+str(int(self.obs_size/2))+'''"/>
-                            <max x="'''+str(int(self.obs_size/2))+'''" y="0" z="'''+str(int(self.obs_size/2))+'''"/>
+                            <min x="-'''+str(int(self.obs_size/4))+'''" y="0" z="0"/>
+                            <max x="'''+str(int(self.obs_size/4))+'''" y="'''+str(int(self.obs_size/2))+'''" z="'''+str(int(self.obs_size/2))+'''"/>
                         </Grid>
                     </ObservationFromGrid>
                     <ObservationFromFullInventory/>
@@ -446,7 +446,7 @@ class Zoomer(gym.Env):
         return world_state
 
     def get_observation(self, world_state):
-        obs = np.zeros((2 * self.obs_size * self.obs_size, ))  #Change size how big obs box is (volume of box)
+        obs = np.zeros((self.obs_size/2 * self.obs_size/4 * self.obs_size/2, ))  #Change size how big obs box is (volume of box)
         allow_move_action = False
         yRew = 0
         zRew = 0
@@ -472,7 +472,9 @@ class Zoomer(gym.Env):
                     allow_move_action = observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "lava"
                 self.checkRocketPosition(observations)
                 break
-
+            
+        obs.append(yRew)
+        obs.append(zRew)
         return obs, allow_move_action, yRew, zRew
 
 
