@@ -79,7 +79,9 @@ class Zoomer(gym.Env):
         malmoutils.parse_command_line(self.agent_host)
         self.recordingsDirectory = malmoutils.get_recordings_directory(self.agent_host)
         self.video_requirements = '<VideoProducer><Width>860</Width><Height>480</Height></VideoProducer>' if self.agent_host.receivedArgument("record_video") else ''
-
+        self.iteration_count = 0
+    
+    
     def reset(self):
         """
         Resets the environment for the next episode.
@@ -101,7 +103,13 @@ class Zoomer(gym.Env):
         if len(self.returns) > self.log_frequency + 1 and \
             len(self.returns) % self.log_frequency == 0:
             self.log_returns()
-
+        
+        if self.iteration_count%10 == 0:
+            checkpoint_path = trainer.save()
+            print(checkpoint_path)
+        
+        self.iteration_count +=1
+        
         # Get Observation
         self.obs, self.allow_move_action = self.get_observation(world_state)
         
@@ -482,24 +490,23 @@ class Zoomer(gym.Env):
         with open('returns.txt', 'w') as f:
             for step, value in zip(self.steps[1:], self.returns[1:]):
                 f.write("{}\t{}\n".format(step, value)) 
-
-if __name__ == '__main__':
-    ray.init()
-    trainer = ppo.PPOTrainer(env=Zoomer, config={
-        'env_config': {},           # No environment parameters to configure
-        'framework': 'torch',       # Use pyotrch instead of tensorflow
-        'num_gpus': 0,              # We aren't using GPUs
-        'num_workers': 0            # We aren't using parallelism
-    })
     
-    #https://github.com/ray-project/ray/issues/7983
-    #insert path that the training gets saved to
-    # trainer.restore(path)
+    def train_agent(self):
+        ray.init()
+        self.trainer = ppo.PPOTrainer(env=Zoomer, config={
+            'env_config': {},           # No environment parameters to configure
+            'framework': 'torch',       # Use pyotrch instead of tensorflow
+            'num_gpus': 0,              # We aren't using GPUs
+            'num_workers': 0            # We aren't using parallelism
+        })
+        
+        #https://github.com/ray-project/ray/issues/7983
+        #insert path that the training gets saved to
+        # self.trainer.restore(path)
 
-    i = 0
-    while True:
-        result = trainer.train()
-        if i%10 == 0: #save every 10th training iteration
-            checkpoint_path = trainer.save()
-            print(checkpoint_path)
-        i+=1
+        while True:
+            result = self.trainer.train()
+            
+if __name__ == '__main__':
+    zoomer = Zoomer()
+    zoomer.train_agent()
