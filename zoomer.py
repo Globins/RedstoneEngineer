@@ -505,6 +505,7 @@ if __name__ == '__main__':
         'framework': 'torch',       # Use pyotrch instead of tensorflow
         'num_gpus': 0,              # We aren't using GPUs
         'num_workers': 0,           # We aren't using parallelism
+        'train_batch_size': 128
     })
     
     #https://github.com/ray-project/ray/issues/7983
