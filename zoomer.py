@@ -208,6 +208,7 @@ class Zoomer(gym.Env):
 
         obsString = ""
         checkptReward = ""
+        forwardReward = ""
         while(loopCount < obstacleCourseLength):
             for _ in range(random.randint(minObstacleAmount,maxObstacleAmount)):
                 xA = random.randint(-courseHalfWidth,courseHalfWidth)
@@ -228,6 +229,13 @@ class Zoomer(gym.Env):
                 for y in range(obstSpawnMaxY):
                     checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, loopCount+1, 1, 0)
             loopCount += obstacleGap
+
+        counter = playerStart
+        for x in range(-courseHalfWidth, courseHalfWidth):
+            for y in range(obstSpawnMaxY):
+                forwardReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, counter, 1, 0)
+            counter += 1
+
         obstacleCourseXML = ""
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
@@ -294,6 +302,7 @@ class Zoomer(gym.Env):
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
                     </RewardForReachingPosition>
+                    <RewardForTimeTaken initialReward = "0"  delta = "1" density = "MISSION_END"/>
                     <AgentQuitFromTouchingBlockType>
                         <Block type="redstone_block"/>
                     </AgentQuitFromTouchingBlockType>
