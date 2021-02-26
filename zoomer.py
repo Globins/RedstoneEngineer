@@ -36,7 +36,6 @@ from gym.spaces import Discrete, Box
 from ray.rllib.agents import ppo
 from sys import platform
 
-prevZ = 0.9
 
 malmoutils.fix_print()
 class Zoomer(gym.Env):
@@ -48,6 +47,7 @@ class Zoomer(gym.Env):
         self.obs_size = 5
         self.max_episode_steps = 100
         self.log_frequency = 10
+        self.prevZ = .9
         
         self.action_dict = {
             0: 'move 1',  # Move one block forward
@@ -99,7 +99,7 @@ class Zoomer(gym.Env):
         self.steps.append(current_step + self.episode_step)
         self.episode_return = 0
         self.episode_step = 0
-
+        self.zPrev = .9
         # Log
         if len(self.returns) > self.log_frequency + 1 and \
             len(self.returns) % self.log_frequency == 0:
@@ -154,12 +154,12 @@ class Zoomer(gym.Env):
             reward += r.getValue()
         if (yReward < 5):
             reward += -13
-        if (zReward > prevZ):
+        if (zReward > self.prevZ):
             reward += 4
-            prevZ = zReward
+            self.prevZ = zReward
         self.episode_return += reward
         print("REWARD " 
-            + str(reward))
+            + str(zReward))
         return self.obs, reward, done, dict()
 
     
