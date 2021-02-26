@@ -152,10 +152,13 @@ class Zoomer(gym.Env):
         reward = 0
         for r in world_state.rewards:
             reward += r.getValue()
-        if (yReward < 5):
-            reward += -13
+        if (yReward < 7):
+            reward -= 10
         if (zReward > self.prevZ):
-            reward += 4
+            reward += 1
+            self.prevZ = zReward
+        else:
+            reward -= 10
             self.prevZ = zReward
         self.episode_return += reward
         print("REWARD " 
@@ -244,11 +247,6 @@ class Zoomer(gym.Env):
                     checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, loopCount+1, 1, 0)
             loopCount += obstacleGap
 
-        # counter = playerStart
-        # for x in range(-courseHalfWidth, courseHalfWidth):
-        #     for y in range(obstSpawnMaxY):
-        #         forwardReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, counter, 1, 0)
-        #     counter += 1
 
         obstacleCourseXML = ""
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
@@ -307,11 +305,11 @@ class Zoomer(gym.Env):
                     <ObservationFromFullInventory/>
                     ''' + self.video_requirements + '''
                     <RewardForTouchingBlockType>
-                        <Block type="lava" reward="-50" />
+                        <Block type="lava" reward="-5" />
                         <Block type="redstone_block" reward="1000" />
-                        <Block type="obsidian" reward="-50" />
-                        <Block type="wool" reward="-10" />
-                        <Block type="glass" reward="-50" />
+                        <Block type="obsidian" reward="-5" />
+                        <Block type="wool" reward="-1" />
+                        <Block type="glass" reward="-5" />
                     </RewardForTouchingBlockType>
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
@@ -472,12 +470,10 @@ class Zoomer(gym.Env):
                     obs[i] = x == "wool"
 
                 if('LineOfSight' in observations):
-                    allow_move_action = observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "lava"
+                    allow_move_action = observations['LineOfSight']['type'] == "wool"
                 self.checkRocketPosition(observations)
                 break
 
-        # obs.append(yRew)
-        # obs.append(zRew)
         return obs, allow_move_action, yRew, zRew
 
 
@@ -515,10 +511,7 @@ if __name__ == '__main__':
     #insert path that the training gets saved to
     # trainer.restore(path)
 
-    i = 0
     while True:
         result = trainer.train()
-        if i%10 == 0: #save every 10th training iteration
-            checkpoint_path = trainer.save()
-            print(checkpoint_path)
-        i+=1
+        checkpoint_path = trainer.save()
+        print(checkpoint_path)
