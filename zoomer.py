@@ -450,7 +450,7 @@ class Zoomer(gym.Env):
         return world_state
 
     def get_observation(self, world_state):
-        obs = np.zeros((self.obs_size/2 * self.obs_size/2 * self.obs_size/2, ))  #Change size how big obs box is (volume of box)
+        obs = np.zeros((int((self.obs_size/2+1) * (self.obs_size/2+1)  * (self.obs_size/2+1)), ))  #Change size how big obs box is (volume of box)
         allow_move_action = False
         yRew = 0
         zRew = 0
@@ -468,7 +468,8 @@ class Zoomer(gym.Env):
                 zRew = observations['ZPos'] #use this instead of checkpoints
                 yRew = observations['YPos'] #append it to the end of obs vari ues this to avoid lava
 
-
+                print(len(obs))
+                print(len(grid))
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool"
 
@@ -477,8 +478,8 @@ class Zoomer(gym.Env):
                 self.checkRocketPosition(observations)
                 break
 
-        obs.append(yRew)
-        obs.append(zRew)
+        # obs.append(yRew)
+        # obs.append(zRew)
         return obs, allow_move_action, yRew, zRew
 
 
