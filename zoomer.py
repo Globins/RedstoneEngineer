@@ -111,7 +111,7 @@ class Zoomer(gym.Env):
         self.iteration_count +=1
         
         # Get Observation
-        self.obs, self.allow_move_action, yPosition, zPosition = self.get_observation(world_state)
+        self.obs, self.allow_move_action, yReward, zReward = self.get_observation(world_state)
         
         return self.obs
 
@@ -143,7 +143,7 @@ class Zoomer(gym.Env):
         world_state = self.agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
-        self.obs, self.allow_move_action, yPosition, zPosition = self.get_observation(world_state)
+        self.obs, self.allow_move_action, yReward, zReward = self.get_observation(world_state)
         # Get Done
         done = not world_state.is_mission_running 
 
@@ -454,6 +454,9 @@ class Zoomer(gym.Env):
             if len(world_state.errors) > 0:
                 raise AssertionError('Could not load grid.')
             
+            yRew = 15
+            zRew = 1
+
             if world_state.number_of_observations_since_last_state > 0:
                 msg = world_state.observations[-1].text
                 
@@ -461,6 +464,9 @@ class Zoomer(gym.Env):
                 grid = observations['floorAll']
                 zPos = observations['ZPos']
                 yPos = observations['YPos']
+
+                yRew = yPos
+                zRew = zPos
 
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool" or x == "lava"
@@ -470,7 +476,7 @@ class Zoomer(gym.Env):
                 self.checkRocketPosition(observations)
                 break
 
-        return obs, allow_move_action, yPos, zPos
+        return obs, allow_move_action, yRew, zRew
 
 
     def log_returns(self):
