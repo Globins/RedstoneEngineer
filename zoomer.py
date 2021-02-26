@@ -230,11 +230,11 @@ class Zoomer(gym.Env):
                     checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, loopCount+1, 1, 0)
             loopCount += obstacleGap
 
-        counter = playerStart
-        for x in range(-courseHalfWidth, courseHalfWidth):
-            for y in range(obstSpawnMaxY):
-                forwardReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, counter, 1, 0)
-            counter += 1
+        # counter = playerStart
+        # for x in range(-courseHalfWidth, courseHalfWidth):
+        #     for y in range(obstSpawnMaxY):
+        #         forwardReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, counter, 1, 0)
+        #     counter += 1
 
         obstacleCourseXML = ""
         obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
@@ -337,7 +337,6 @@ class Zoomer(gym.Env):
             key = 'InventorySlot_'+str(i)+'_item'
             if key in obs:
                 item = obs[key]
-                print(item == 'fireworks')
                 if item == 'fireworks':
                     self.agent_host.sendCommand("swapInventoryItems 0 " + str(i))
                     return
@@ -450,19 +449,11 @@ class Zoomer(gym.Env):
                 
                 observations = json.loads(msg)
                 grid = observations['floorAll']
-           
+                zPos = observations['ZPos']
+                yPos = observations['YPos']
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool" or x == "lava"
-                obs = obs.reshape((2, self.obs_size, self.obs_size))
-                
-                # yaw = observations['Yaw']
-                # if yaw >= 225 and yaw < 315:
-                #     obs = np.rot90(obs, k=1, axes=(1, 2))
-                # elif yaw >= 315 or yaw < 45:
-                #     obs = np.rot90(obs, k=2, axes=(1, 2))
-                # elif yaw >= 45 and yaw < 135:
-                #     obs = np.rot90(obs, k=3, axes=(1, 2))
-                obs = obs.flatten()
+
                 if('LineOfSight' in observations):
                     allow_move_action = observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "lava"
                 self.checkRocketPosition(observations)
