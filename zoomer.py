@@ -450,7 +450,7 @@ class Zoomer(gym.Env):
         return world_state
 
     def get_observation(self, world_state):
-        obs = np.zeros((self.obs_size/2 * self.obs_size/4 * self.obs_size/2, ))  #Change size how big obs box is (volume of box)
+        obs = np.zeros((self.obs_size/2 * self.obs_size/2 * self.obs_size/2, ))  #Change size how big obs box is (volume of box)
         allow_move_action = False
         yRew = 0
         zRew = 0
@@ -470,13 +470,13 @@ class Zoomer(gym.Env):
 
 
                 for i, x in enumerate(grid):
-                    obs[i] = x == "wool" or x == "lava"
+                    obs[i] = x == "wool"
 
                 if('LineOfSight' in observations):
                     allow_move_action = observations['LineOfSight']['type'] == "wool" or observations['LineOfSight']['type'] == "lava"
                 self.checkRocketPosition(observations)
                 break
-            
+
         obs.append(yRew)
         obs.append(zRew)
         return obs, allow_move_action, yRew, zRew
