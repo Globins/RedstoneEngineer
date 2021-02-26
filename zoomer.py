@@ -301,6 +301,7 @@ class Zoomer(gym.Env):
                     </RewardForTouchingBlockType>
                     <RewardForReachingPosition>
                         ''' + checkptReward + '''
+                        ''' + forwardReward + '''
                     </RewardForReachingPosition>
                     <RewardForTimeTaken initialReward = "0"  delta = "1" density = "MISSION_END"/>
                     <AgentQuitFromTouchingBlockType>
