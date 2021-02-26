@@ -103,7 +103,7 @@ class Zoomer(gym.Env):
             self.log_returns()
 
         # Get Observation
-        self.obs, self.allow_move_action = self.get_observation(world_state)
+        self.obs, self.allow_move_action, yPosition, zPosition = self.get_observation(world_state)
         
         return self.obs
 
@@ -135,7 +135,7 @@ class Zoomer(gym.Env):
         world_state = self.agent_host.getWorldState()
         for error in world_state.errors:
             print("Error:", error.text)
-        self.obs, self.allow_move_action = self.get_observation(world_state) 
+        self.obs, self.allow_move_action, yPosition, zPosition = self.get_observation(world_state)
         # Get Done
         done = not world_state.is_mission_running 
 
@@ -143,8 +143,10 @@ class Zoomer(gym.Env):
         reward = 0
         for r in world_state.rewards:
             reward += r.getValue()
+            if (yPosition < 5):
+                reward += -10
         self.episode_return += reward
-        print("REWARD" 
+        print("REWARD " 
             + str(reward))
         return self.obs, reward, done, dict()
 
@@ -451,6 +453,7 @@ class Zoomer(gym.Env):
                 grid = observations['floorAll']
                 zPos = observations['ZPos']
                 yPos = observations['YPos']
+
                 for i, x in enumerate(grid):
                     obs[i] = x == "wool" or x == "lava"
 
@@ -459,7 +462,7 @@ class Zoomer(gym.Env):
                 self.checkRocketPosition(observations)
                 break
 
-        return obs, allow_move_action
+        return obs, allow_move_action, yPos, zPos
 
 
     def log_returns(self):
