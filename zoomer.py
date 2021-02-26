@@ -36,6 +36,7 @@ from gym.spaces import Discrete, Box
 from ray.rllib.agents import ppo
 from sys import platform
 
+prevZ = 0.9
 
 malmoutils.fix_print()
 class Zoomer(gym.Env):
@@ -153,6 +154,9 @@ class Zoomer(gym.Env):
             reward += r.getValue()
         if (yReward < 5):
             reward += -13
+        if (zReward > prevZ):
+            reward += 4
+            prevZ = zReward
         self.episode_return += reward
         print("REWARD " 
             + str(reward))
