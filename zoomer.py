@@ -58,7 +58,7 @@ class Zoomer(gym.Env):
 
         # Rllib Parameters
         self.action_space = Box(-.05,.05, shape = (3,), dtype = np.float32)
-        self.observation_space = Box(0, 1, shape=(2 * self.obs_size * self.obs_size, ), dtype=np.float32)
+        self.observation_space = Box(0, 1, shape=(((self.obs_size/2) + 1) ** 3,), dtype=np.float32)
 
         # Malmo Parameters
         self.agent_host = MalmoPython.AgentHost()
