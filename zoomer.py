@@ -143,8 +143,8 @@ class Zoomer(gym.Env):
         reward = 0
         for r in world_state.rewards:
             reward += r.getValue()
-            if (yPosition < 5):
-                reward += -10
+        if (yPosition < 5):
+            reward += -10
         self.episode_return += reward
         print("REWARD " 
             + str(reward))
