@@ -48,6 +48,7 @@ class Zoomer(gym.Env):
         self.max_episode_steps = 100
         self.log_frequency = 10
         self.prevZ = .9
+        self.generationCount = 0
         
         self.action_dict = {
             0: 'move 1',  # Move one block forward
@@ -70,7 +71,8 @@ class Zoomer(gym.Env):
             print(self.agent_host.getUsage())
             exit(1)
 
-        # DiamondCollector Parameters
+        # Zoomer Parameters
+        self.firstGen = True
         self.obs = None
         self.allow_move_action = False
         self.episode_step = 0
@@ -105,9 +107,6 @@ class Zoomer(gym.Env):
             len(self.returns) % self.log_frequency == 0:
             self.log_returns()
         
-        # if self.iteration_count%10 == 0:
-        #   checkpoint_path = trainer.save()
-        #   print(checkpoint_path)
         
         self.iteration_count +=1
         
@@ -161,8 +160,7 @@ class Zoomer(gym.Env):
             reward -= 10
             self.prevZ = zReward
         self.episode_return += reward
-        print("REWARD " 
-            + str(reward))
+        print("REWARD "+ str(reward))
         return self.obs, reward, done, dict()
 
     
@@ -205,8 +203,10 @@ class Zoomer(gym.Env):
         return points_in_line
 
 #-----------------------------------------------------------------------------------------------------
-    def GetMissionXML(self, summary):
+    def GetMissionXML(self, summary, isFirst):
         ''' Build an XML mission string.'''
+        summary += str(self.generationCount)
+        self.generationCount += 1
         courseHalfWidth = 16
 
         obstSpawnMinY = 6
@@ -224,8 +224,6 @@ class Zoomer(gym.Env):
         loopCount = obstacleStart
 
         obsString = ""
-        checkptReward = ""
-        forwardReward = ""
         while(loopCount < obstacleCourseLength):
             for _ in range(random.randint(minObstacleAmount,maxObstacleAmount)):
                 xA = random.randint(-courseHalfWidth,courseHalfWidth)
@@ -241,23 +239,22 @@ class Zoomer(gym.Env):
                     obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xB, yA, loopCount)
                 else:
                     obsString += "<DrawCuboid x1 = '{}' y1 = '{}' z1 = '{}' x2 = '{}' y2 = '{}' z2 = '{}' type='wool' colour='BLUE'/>".format(xA, yA, loopCount, xA, yB, loopCount)
-
-            for x in range(-courseHalfWidth, courseHalfWidth):
-                for y in range(obstSpawnMaxY):
-                    checkptReward += "<Marker x='{}' y='{}' z='{}' reward='{}' tolerance='{}' />".format(x, y, loopCount+1, 1, 0)
             loopCount += obstacleGap
 
 
         obstacleCourseXML = ""
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(courseHalfWidth, 4, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #left wall
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 4, playerStart-5, -courseHalfWidth-1, obstSpawnMaxY+1, obstacleCourseLength) #right wall
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='glass'/>".format(-courseHalfWidth-1, obstSpawnMaxY+1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #ceiling
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='lava'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, 3, obstacleCourseLength) #floor
-        obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='redstone_block'/>".format(-courseHalfWidth-1, 4, obstacleCourseLength, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #end wall
-        obstacleCourseXML += "<DrawBlock x='{}'  y='14' z='{}' type='emerald_block'/>".format(playerStart, playerStart)
-        
+        if(isFirst):
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='50' z2='{}' type='air'/>".format(-obstacleCourseLength, -obstacleCourseLength, obstacleCourseLength, obstacleCourseLength)
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, playerStart-5) #Backwall
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(courseHalfWidth, 4, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #left wall
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='obsidian'/>".format(-courseHalfWidth-1, 4, playerStart-5, -courseHalfWidth-1, obstSpawnMaxY+1, obstacleCourseLength) #right wall
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='glass'/>".format(-courseHalfWidth-1, obstSpawnMaxY+1, playerStart-5, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #ceiling
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='lava'/>".format(-courseHalfWidth-1, 1, playerStart-5, courseHalfWidth, 3, obstacleCourseLength) #floor
+            obstacleCourseXML += "<DrawCuboid x1='{}' y1='{}' z1='{}' x2='{}' y2='{}' z2='{}' type='redstone_block'/>".format(-courseHalfWidth-1, 4, obstacleCourseLength, courseHalfWidth, obstSpawnMaxY+1, obstacleCourseLength) #end wall
+            obstacleCourseXML += "<DrawBlock x='{}'  y='14' z='{}' type='emerald_block'/>".format(playerStart, playerStart)
+        else:
+            obstacleCourseXML = "<DrawCuboid x1='{}' y1='4' z1='{}' x2='{}' y2='{}' z2='{}' type='air'/>".format(-courseHalfWidth+1, playerStart-4, courseHalfWidth-1,obstSpawnMaxY, obstacleCourseLength-1)
+            obstacleCourseXML += "<DrawBlock x='{}'  y='14' z='{}' type='emerald_block'/>".format(playerStart, playerStart)
         playerSpawn = "<Placement x='{}' y='15.0' z='{}'/>".format(playerStart+.5, playerStart+.9)
         return '''<?xml version="1.0" encoding="UTF-8" ?>
         <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -311,10 +308,6 @@ class Zoomer(gym.Env):
                         <Block type="wool" reward="-1" />
                         <Block type="glass" reward="-5" />
                     </RewardForTouchingBlockType>
-                    <RewardForReachingPosition>
-                        ''' + checkptReward + '''
-                        ''' + forwardReward + '''
-                    </RewardForReachingPosition>
                     <RewardForTimeTaken initialReward = "0"  delta = "1" density = "MISSION_END"/>
                     <AgentQuitFromTouchingBlockType>
                         <Block type="redstone_block"/>
@@ -403,7 +396,8 @@ class Zoomer(gym.Env):
         else:
             num_reps = 1
 
-        my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #1"),validate)
+        my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #", self.firstGen),validate)
+        self.firstGen = False
         my_mission_record = MalmoPython.MissionRecordSpec() # Records nothing by default
         if self.recordingsDirectory:
             my_mission_record.recordRewards()
@@ -474,6 +468,8 @@ class Zoomer(gym.Env):
                 self.checkRocketPosition(observations)
                 break
 
+        np.concatenate((obs,np.array([int(yRew)])))
+        np.concatenate((obs,np.array([int(zRew)])))
         return obs, allow_move_action, yRew, zRew
 
 
