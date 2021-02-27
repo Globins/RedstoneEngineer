@@ -342,7 +342,6 @@ class Zoomer(gym.Env):
     def checkRocketPosition(self, obs):
         '''Make sure our rockets, if we have any, is in slot 0.'''
         if(obs['InventorySlot_0_item'] == 'fireworks'):
-            self.agent_host.sendCommand("swapInventoryItems 0 9")
             return
         for i in range(1,36):
             key = 'InventorySlot_'+str(i)+'_item'
