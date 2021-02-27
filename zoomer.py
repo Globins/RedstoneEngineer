@@ -276,7 +276,7 @@ class Zoomer(gym.Env):
                     ''' + obstacleCourseXML + obsString + '''
                         <DrawEntity x="0" y="5" z="0" type="Cow" yaw="0"/>
                     </DrawingDecorator>
-                    <ServerQuitFromTimeUp timeLimitMs="60000"/>
+                    <ServerQuitFromTimeUp timeLimitMs="30000"/>
                     <ServerQuitWhenAnyAgentFinishes />
                 </ServerHandlers>
             </ServerSection>
@@ -304,11 +304,11 @@ class Zoomer(gym.Env):
                     <ObservationFromFullInventory/>
                     ''' + self.video_requirements + '''
                     <RewardForTouchingBlockType>
-                        <Block type="lava" reward="-5" />
+                        <Block type="lava" reward="-50" />
                         <Block type="redstone_block" reward="1000" />
-                        <Block type="obsidian" reward="-5" />
-                        <Block type="wool" reward="-1" />
-                        <Block type="glass" reward="-5" />
+                        <Block type="obsidian" reward="-50" />
+                        <Block type="wool" reward="-10" />
+                        <Block type="glass" reward="-50" />
                     </RewardForTouchingBlockType>
                     <RewardForTimeTaken initialReward = "0"  delta = "1" density = "MISSION_END"/>
                     <AgentQuitFromTouchingBlockType>
@@ -439,7 +439,6 @@ class Zoomer(gym.Env):
         print("Starting Flight")
         self.initialize_inventory()
         self.launch()
-        self.agent_host.sendCommand("swapInventoryItems 0 1")
         # mission has ended.
         
         
