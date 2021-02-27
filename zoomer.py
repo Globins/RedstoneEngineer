@@ -291,6 +291,7 @@ class Zoomer(gym.Env):
                 </AgentStart>
                 <AgentHandlers>
                     <ContinuousMovementCommands turnSpeedDegs="480"/>
+                    <InventoryCommands/>
                     <ChatCommands/>
                     <ObservationFromFullStats/>
                     <ObservationFromRay/>
@@ -330,22 +331,27 @@ class Zoomer(gym.Env):
         self.agent_host.sendCommand("use 1")
         time.sleep(.2)
         for i in range(0, 36):
-            self.agent_host.sendCommand("chat /give @p fireworks 64 0 {Fireworks:{Flight:1}}")
+            self.agent_host.sendCommand("chat /give @p fireworks 2 0 {Fireworks:{Flight:1}}")
 
 
     def boost(self):
         self.agent_host.sendCommand("use 1")
         self.agent_host.sendCommand("use 0")
+        
 
     def checkRocketPosition(self, obs):
         '''Make sure our rockets, if we have any, is in slot 0.'''
-        for i in range(1,39):
+        if(obs['InventorySlot_0_item'] == 'fireworks'):
+            self.agent_host.sendCommand("swapInventoryItems 0 9")
+            return
+        for i in range(1,36):
             key = 'InventorySlot_'+str(i)+'_item'
             if key in obs:
                 item = obs[key]
                 if item == 'fireworks':
                     self.agent_host.sendCommand("swapInventoryItems 0 " + str(i))
                     return
+        
 
     def launch(self):
         if (platform == "linux" or platform == "macOS"):
@@ -434,7 +440,7 @@ class Zoomer(gym.Env):
         print("Starting Flight")
         self.initialize_inventory()
         self.launch()
-            
+        self.agent_host.sendCommand("swapInventoryItems 0 1")
         # mission has ended.
         
         
