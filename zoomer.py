@@ -129,13 +129,14 @@ class Zoomer(gym.Env):
             info: <dict> dictionary of extra information
         """
         # Get Action 
-
-        if self.allow_move_action or action[2] < 0:
+        self.agent_host.sendCommand('pitch {}'.format(action[0]))
+        self.agent_host.sendCommand('turn {}'.format(action[1]))
+        if action[2] > 0:
+            self.boost()
+        if self.allow_move_action:
             self.agent_host.sendCommand('pitch {}'.format(action[0]))
             self.agent_host.sendCommand('turn {}'.format(action[1]))
-            time.sleep(.2)
-        else:
-            self.boost()
+        time.sleep(.2)
         self.episode_step +=1
         
 
@@ -212,8 +213,8 @@ class Zoomer(gym.Env):
         obstSpawnMinY = 6
         obstSpawnMaxY = 49
 
-        minObstacleAmount = 5
-        maxObstacleAmount = 15
+        minObstacleAmount = 1
+        maxObstacleAmount = 10
         horizChance = 70
         diagChance = 15
         obstacleCourseLength = 300
@@ -275,7 +276,7 @@ class Zoomer(gym.Env):
                     ''' + obstacleCourseXML + obsString + '''
                         <DrawEntity x="0" y="5" z="0" type="Cow" yaw="0"/>
                     </DrawingDecorator>
-                    <ServerQuitFromTimeUp timeLimitMs="150000"/>
+                    <ServerQuitFromTimeUp timeLimitMs="60000"/>
                     <ServerQuitWhenAnyAgentFinishes />
                 </ServerHandlers>
             </ServerSection>
