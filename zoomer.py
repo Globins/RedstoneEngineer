@@ -331,7 +331,7 @@ class Zoomer(gym.Env):
         self.agent_host.sendCommand("use 1")
         time.sleep(.2)
         for i in range(0, 36):
-            self.agent_host.sendCommand("chat /give @p fireworks 2 0 {Fireworks:{Flight:1}}")
+            self.agent_host.sendCommand("chat /give @p fireworks 64 0 {Fireworks:{Flight:1}}")
 
 
     def boost(self):
