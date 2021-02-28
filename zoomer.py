@@ -36,7 +36,7 @@ from gym.spaces import Discrete, Box
 from ray.rllib.agents import ppo
 from sys import platform
 
-
+firstGen = True
 malmoutils.fix_print()
 class Zoomer(gym.Env):
     def __init__(self, env_config):  
@@ -72,7 +72,7 @@ class Zoomer(gym.Env):
             exit(1)
 
         # Zoomer Parameters
-        self.firstGen = True
+        
         self.obs = None
         self.allow_move_action = False
         self.episode_step = 0
@@ -356,18 +356,16 @@ class Zoomer(gym.Env):
         if (platform == "linux" or platform == "macOS"):
             pass
         elif(platform == "win32"):
-            import pyautogui
-            import pygetwindow as gw
-            minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
-            minecraftWin.activate()
+            import pywinauto as pw
+            app = pw.Application(backend="win32").connect(title="Minecraft 1.11.2")
+            form = app.window(title_re="Minecraft 1.11.2")
             self.agent_host.sendCommand("jump 1")
             self.agent_host.sendCommand("move 1")
             time.sleep(.5)
-            pyautogui.press('enter')
-            pyautogui.keyDown('space')
+            form.send_keystrokes('{ENTER}')
+            form.send_keystrokes('{SPACE 4}')
             time.sleep(.15)
-            pyautogui.keyUp('space')
-            pyautogui.press('enter')
+            form.send_keystrokes('{ENTER}')
 
 
     def printInventory(self, obs):
@@ -390,6 +388,7 @@ class Zoomer(gym.Env):
         """
         Initialize new malmo mission.
         """
+        global firstGen
         validate = True
         my_client_pool = MalmoPython.ClientPool()
         my_client_pool.add(MalmoPython.ClientInfo("127.0.0.1", 10000))
@@ -402,8 +401,8 @@ class Zoomer(gym.Env):
         else:
             num_reps = 1
 
-        my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #", self.firstGen),validate)
-        self.firstGen = False
+        my_mission = MalmoPython.MissionSpec(self.GetMissionXML("Flight #", firstGen),validate)
+        firstGen = False
         my_mission_record = MalmoPython.MissionRecordSpec() # Records nothing by default
         if self.recordingsDirectory:
             my_mission_record.recordRewards()
