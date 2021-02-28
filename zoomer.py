@@ -356,16 +356,18 @@ class Zoomer(gym.Env):
         if (platform == "linux" or platform == "macOS"):
             pass
         elif(platform == "win32"):
-            import pywinauto as pw
-            app = pw.Application(backend="win32").connect(title="Minecraft 1.11.2")
-            form = app.window(title_re="Minecraft 1.11.2")
+            import pyautogui
+            import pygetwindow as gw
+            minecraftWin = gw.getWindowsWithTitle('Minecraft 1.11.2')[0]
+            minecraftWin.activate() 
             self.agent_host.sendCommand("jump 1")
             self.agent_host.sendCommand("move 1")
             time.sleep(.5)
-            form.send_keystrokes('{ENTER}')
-            form.send_keystrokes('{SPACE 4}')
+            pyautogui.press('enter')
+            pyautogui.keyDown('space')
             time.sleep(.15)
-            form.send_keystrokes('{ENTER}')
+            pyautogui.keyUp('space')
+            pyautogui.press('enter')
 
 
     def printInventory(self, obs):
