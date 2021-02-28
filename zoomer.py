@@ -365,7 +365,7 @@ class Zoomer(gym.Env):
             time.sleep(.5)
             pyautogui.press('enter')
             pyautogui.keyDown('space')
-            time.sleep(.15)
+            time.sleep(.05)
             pyautogui.keyUp('space')
             pyautogui.press('enter')
 
@@ -510,10 +510,14 @@ if __name__ == '__main__':
         'train_batch_size': 128
     })
     
+    print("Please Enter Path (Press enter if no saved values)")
+    path = input()
+    if(path):
+        trainer.restore(path)
     #https://github.com/ray-project/ray/issues/7983
     #insert path that the training gets saved to
     # trainer.restore(path)
-
+    #C:\Users\Gordon/ray_results\PPO_Zoomer_2021-02-27_17-51-57zgffyfhk\checkpoint_3\checkpoint-3
     while True:
         result = trainer.train()
         checkpoint_path = trainer.save()
