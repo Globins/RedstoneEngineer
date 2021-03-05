@@ -216,7 +216,7 @@ class Zoomer(gym.Env):
         minObstacleAmount = 1
         maxObstacleAmount = 10
         horizChance = 70
-        diagChance = 15
+        diagChance = 10
         obstacleCourseLength = 300
 
         obstacleGap = 10
