@@ -155,7 +155,7 @@ class Zoomer(gym.Env):
         if (yReward < 7):
             reward -= 10
         if (zReward > self.prevZ):
-            reward += 1
+            reward += 7.5
             self.prevZ = zReward
         else:
             reward -= 10
