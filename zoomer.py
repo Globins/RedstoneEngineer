@@ -474,8 +474,8 @@ class Zoomer(gym.Env):
                 self.checkRocketPosition(observations)
                 break
 
-        np.concatenate((obs,np.array([int(yRew)])))
-        np.concatenate((obs,np.array([int(zRew)])))
+        obs = np.concatenate((obs,np.array([int(yRew)])))
+        obs = np.concatenate((obs,np.array([int(zRew)])))
         return obs, allow_move_action, yRew, zRew
 
 
