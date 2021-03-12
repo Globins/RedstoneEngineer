@@ -20,37 +20,20 @@ Finally, it is important to add rewards to discourage or encourage the agent fro
 
 
 <h2>Evaluation:</h2>
+<h4>Quantitative Evaluation:</h4>
 For our quantitative evaluation, we decided to use the reward counter since that would give us an overview of how the agent was performing over a certain period of time. Currently, we have a working agent that gets to the end of the obstacle course occasionally, but dies other times. Below, you can see two graphs highlighting the reward improvement over the course of 1000 steps and over the course of 2500 steps. While the agent tends to have negative rewards sometimes, we can already see an upward trend leading towards the positive side. Once we start training the agent for longer periods of time, we can expect to see a more stable positive reward.
 
 <img src="zoomer_graph_1.jpg" width="500" height="500"/>
 <img src="zoomer_graph_2.jpg" width="500" height="500"/>
 
+<h4>Qualitative Evaluation:</h4>
 For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In the first video below, you can see the agent crashing immediately into the lava. In the second video, after changing the pitch, our agent was able to react more positively to the obstacles by avoiding them.
 
 
 ![](https://media.giphy.com/media/CNWDGkhmbiGpNUWV5Y/giphy.gif)
 ![](https://media.giphy.com/media/boW7I8waJeu4RQDeM8/giphy.gif)
 
-<h2>Remaining Goals and Challenges:</h2>
-
-<h4>Remaining Goals:</h4>
-So far we have developed the base for our AI, however we need to do a lot to improve the performance and effiency of the AI. Moving forward, we need to reevaluate how we train the AI to generate results faster. Even though the AI can successfully get through the basic obstacle course, we do not save the results every time, which leads to retraining it everytime we want to run it. The AI also continues to run into lava and gets stuck in certain patterns if the generation is extremely similar. We also need to better control on when to use the boosts for the AI, as it continues to ram against obstacles.
-
-For the next few weeks, we will be experimenting with different ways to gather input to create more proactive movement compared to the reactive movement we have now. We plan to use video recording and a depth map recognize obstacles and walls in order to move the pitch and turn of the agent to the area of most depth. The reason for this change is that currently, we use only line of sight and a tight 5x5 observation grid to move out of the way. Since we move fast, the observation grid might not be able to capture the blocks in time, or we could turn too late due to our velocity. 
-
-We also plan to create a more complex, longer obstacle course to be generated as the agent gets faster and more efficient. We will add a variety of obstacles such as vertical and diagonal lines. We would like to add moving obstacles as well, however there is no mechanism for that at the moment. We will also use this more complex obstacle course to reevaluate our current methods.
-
-
-<h4>Challenges:</h4>
-From our experience so far, we have had some trouble ensuring that the agent stays alive when it reaches the redstone wall. During some runs, the agent will smack the redstone wall or obstacle at an extremely high velocity, causing it to die on impact. While it still receives the reward and improved performance, the agent still technically fails as it dies during mid-flight. Our current solution to this problem is to use diamond armor with Protection IV and Unbreaking III. Although this does help a bit, it does not solve the issue entirely due to multiple impacts causing a large amount of damage. Moving forward we will try to use a rule for boosting to prevent high velocities.
-
-We also had trouble using the malmo agent for some of the functions surrounding elytra. Currently, we have to use two third party libraries: "pyautogui" and "pygetwindow", which only works on Windows, to force the program to hold the space bar to activate the elytra on flight. This only happens at the beginning of each mission and so it does not compromise the rest of the AI. Although it works for now, we will try to find another way to get the elytra to fly without using these libraries.
-
-In terms of item generation, we also had trouble getting the items to spawn with the correct properties (i.e. fireworks with Flight Duration I) using only the XML. As a workaround, we used the console commands to spawn the items (such as armor, firework rockets) before the mission begins. However the only drawback to this is that the screen has a black block at the start. Moving forward, we will try to ensure that the XML can generate these items without using console commands.
-
-Because the way the checkpoints are generated, as a wall of PointWithRewards, the agent is sometimes motivated to move upwards into the stack of rewards as opposed to across them to reach the end goal. This problem doesn’t seem to be as much of an issue after spending some time considering/testing different reward values. We will continue to test different reward values to determine the best for us or possibly consider an approach without checkpoints. 
-
-<h2>Resources Used:</h2>
+<h2>References/Resources Used:</h2>
 We based our initial reinforcement learning approach/implementation on that provided to us in Assignment #2 (which uses the library “rllib”), which we modified to work with our project. We used the XML Schema and Project Malmo code documentation to help with writing our code. 
 
 Additionally, we used the “pyautogui” and “pygetwindow” libraries to activate the elytra as Malmo could not send the jump output long enough for the wings to activate.
