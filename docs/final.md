@@ -26,31 +26,34 @@ Here you can see that the agent is in fact learning (it is not acheiving the sam
 The data is not trending as upwards as we hoped it would into the positives but because we are using continuous action that is somewhat expected. Nonetheless, there is an undeniable upward trend in terms of less negative reward being achieved later on in the graph, and we see a little less volatility towards the extreme negative values. 
 
 <img src="FinalReturns2.png" width="500" height="500"/>
-Figure Z-1
+<caption>Figure Z-1</caption>
+
 <img src="FinalReturns1.png" width="500" height="500"/>
-Figure Z-2
+<caption>Figure Z-2</caption>
+
 
 <h4>Qualitative Evaluation:</h4>
 For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In Video ZV-1 you can see that the agent is still learning through reinforcement learning, it doesn't quite make it to the goal but it now has more data that it can use to determine what it should do next time. In Videos ZV-2 and ZV-3, you can get an idea of what our agent's baseline performance is like after it has learned with the PPO algorithm a little more and is starting to make less mistakes but still either hits obstacles or struggles to reach the goal. In Video ZV-4, the agent reaches the goal redstone wall with relatively no errors and and through our observation, we know it received a higher reward value than usual. Although sometimes the rewards aren't as high as we would like them, the video results prove to us that the agent is in fact learning and achieving it's goal a lot more often towards the end. 
 
 
-The agent is still learning - does not reach goal:
 ![](https://media.giphy.com/media/orG59r33iqSQQvFaC2/giphy.gif)
-Video ZV-1
+<caption>Video ZV-1</caption>
 
-Baseline Performance:
+
+<h4>Baseline Performance:</h4>
 
 ![](https://media.giphy.com/media/Pmol78fyEMXNjbW6iP/giphy.gif)
-Video ZV-2
+<caption>Video ZV-2</caption>
 
 ![](https://media.giphy.com/media/QJJL9EhKjjqc7NpiUi/giphy.gif)
-Video ZV-3
+<caption>Video ZV-3</caption>
 
 
-Best Performance:
+<h4>Best Performance:</h4>
 
 ![](https://media.giphy.com/media/wVxSe23Q0WoJdty5UZ/giphy.gif)
-Video ZV-4
+<caption>Video ZV-4</caption>
+
 
 
 <h2>References/Resources Used:</h2>
