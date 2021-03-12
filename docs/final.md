@@ -26,7 +26,7 @@ Finally, it is important to add rewards to discourage or encourage the agent fro
 <h4>Quantitative Evaluation:</h4>
 For our quantitative evaluation, we decided to use the reward counter that would give us an overview of how the agent was performing over a certain period of time, including using saved reinforcement learning data from previous runs (See Figure Z-2 that uses the learned data from Figure Z-1 to resume running). 
 Here you can see that the agent is in fact learning (it is not acheiving the same amount of negative reward as it had been in the beginning).
-The data is not trending as upwards as we hoped it would into the positives but because we are using continuous action that is somewhat expected. Nonetheless, there is an undeniable upward trend in terms of less negative reward being achieved later on in the graph, and we see a little less volatility towards the extreme negative values. 
+The data is not trending as upwards as we hoped it would into the positives but because we are using continuous action that is somewhat expected. Nonetheless, there is an undeniable upward trend in terms of less negative reward being achieved later on in the graph, and we see a little less volatility towards the extreme negative values. Based off of the current upwards trend, we predict that if we run it for an even longer amount of time, we would see better upward trending results. 
 
 <img src="FinalReturns2.png" width="500" height="500"/>
 <caption>Figure Z-1</caption>
