@@ -21,17 +21,37 @@ Finally, it is important to add rewards to discourage or encourage the agent fro
 
 <h2>Evaluation:</h2>
 <h4>Quantitative Evaluation:</h4>
-For our quantitative evaluation, we decided to use the reward counter since that would give us an overview of how the agent was performing over a certain period of time. Currently, we have a working agent that gets to the end of the obstacle course occasionally, but dies other times. Below, you can see two graphs highlighting the reward improvement over the course of 1000 steps and over the course of 2500 steps. While the agent tends to have negative rewards sometimes, we can already see an upward trend leading towards the positive side. Once we start training the agent for longer periods of time, we can expect to see a more stable positive reward.
+For our quantitative evaluation, we decided to use the reward counter that would give us an overview of how the agent was performing over a certain period of time, including using saved reinforcement learning data from previous runs (See Figure Z-2 that uses the learned data from Figure Z-1 to resume running). 
+Here you can see that the agent is in fact learning (it is not acheiving the same amount of negative reward as it had been in the beginning).
+The data is not trending as upwards as we hoped it would into the positives but because we are using continuous action that is somewhat expected. Nonetheless, there is an undeniable upward trend in terms of less negative reward being achieved later on in the graph, and we see a little less volatility towards the extreme negative values. 
 
-<img src="zoomer_graph_1.jpg" width="500" height="500"/>
-<img src="zoomer_graph_2.jpg" width="500" height="500"/>
+<img src="FinalReturns2.png" width="500" height="500"/>
+Figure Z-1
+<img src="FinalReturns1.png" width="500" height="500"/>
+Figure Z-2
 
 <h4>Qualitative Evaluation:</h4>
-For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In the first video below, you can see the agent crashing immediately into the lava. In the second video, after changing the pitch, our agent was able to react more positively to the obstacles by avoiding them.
+For our qualitative evaluation, we are analyzing the response time the agent has to see an object and perform an action. Based on this, we are able to determine if the agent is reacting to objects the way we want it to. In Video ZV-1 you can see that the agent is still learning through reinforcement learning, it doesn't quite make it to the goal but it now has more data that it can use to determine what it should do next time. In Videos ZV-2 and ZV-3, you can get an idea of what our agent's baseline performance is like after it has learned with the PPO algorithm a little more and is starting to make less mistakes but still either hits obstacles or struggles to reach the goal. In Video ZV-4, the agent reaches the goal redstone wall with relatively no errors and and through our observation, we know it received a higher reward value than usual. Although sometimes the rewards aren't as high as we would like them, the video results prove to us that the agent is in fact learning and achieving it's goal a lot more often towards the end. 
 
 
-![](https://media.giphy.com/media/CNWDGkhmbiGpNUWV5Y/giphy.gif)
-![](https://media.giphy.com/media/boW7I8waJeu4RQDeM8/giphy.gif)
+The agent is still learning - does not reach goal:
+![](https://media.giphy.com/media/orG59r33iqSQQvFaC2/giphy.gif)
+Video ZV-1
+
+Baseline Performance:
+
+![](https://media.giphy.com/media/Pmol78fyEMXNjbW6iP/giphy.gif)
+Video ZV-2
+
+![](https://media.giphy.com/media/QJJL9EhKjjqc7NpiUi/giphy.gif)
+Video ZV-3
+
+
+Best Performance:
+
+![](https://media.giphy.com/media/wVxSe23Q0WoJdty5UZ/giphy.gif)
+Video ZV-4
+
 
 <h2>References/Resources Used:</h2>
 We based our initial reinforcement learning approach/implementation on that provided to us in Assignment #2 (which uses the library “rllib”), which we modified to work with our project. We used the XML Schema and Project Malmo code documentation to help with writing our code. 
