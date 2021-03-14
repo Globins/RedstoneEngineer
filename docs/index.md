@@ -14,7 +14,7 @@ The goal for our project is to create an agent that can reach the end of an obst
 <b> Weekly Meeting Time: </b>
     We plan on meeting at least once a week at this scheduled time: Fridays at 3:30pm PST + any additional appointments we may need to set up with each other in order to complete the project. 
 
-<img src="https://media.giphy.com/media/PUJMIlRNp4hY0C6slL/giphy.gif" width="750" height="500"/>
+<img src="https://media.giphy.com/media/wVxSe23Q0WoJdty5UZ/giphy.gif" width="750" height="500"/>
 
 <h3>Reports:</h3>
 
