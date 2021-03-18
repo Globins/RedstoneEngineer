@@ -3,6 +3,8 @@ layout: default
 title:  Home
 ---
 
+<img src="ZTitle.png" width="500" height="500"/>
+
 <p><a href="https://github.com/Globins/Zoomer"><font size="5">Github Source Code</font></a></p>
 
 
