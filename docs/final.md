@@ -3,9 +3,7 @@ layout: default
 title:  Status
 ---
 <h1>Video</h1>
-<video width="700" height="300" controls>
-  <source src="CS 175 Project Zoomer - Small.mov" type="video/mp4">
-</video>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/o4R8wv21cOA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <h2>Project Summary:</h2>
 Flying any object at a low altitude is one of the most challenging tasks in both real life and in Minecraft. There’s less time to react, can’t move or see as far and there’s a higher chance of crashing. For this reason, an AI is required to navigate low-flying agents by using object recognition and movement.
