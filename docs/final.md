@@ -64,7 +64,7 @@ For our qualitative evaluation, we are analyzing the response time the agent has
 
 <h4>Best Performance:</h4>
 
-![](https://media.giphy.com/media/wVxSe23Q0WoJdty5UZ/giphy.gif)
+![](https://media.giphy.com/media/O3TjengQQFFnA2AtdQ/giphy.gif)
 <caption>Video ZV-4</caption>
 
 
